@@ -243,8 +243,12 @@ label:focus-within .sr+*{outline:none}
 .shots{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding:14px 4px 10px;margin-bottom:6px}
 .shot{flex:none;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface2);scroll-snap-align:start;cursor:zoom-in}
 .shot img{display:block;height:200px;width:auto;max-width:none}
-.lightbox{position:fixed;inset:0;z-index:70;background:rgba(5,10,30,.9);display:grid;place-items:center;padding:24px;cursor:zoom-out}
-.lightbox img{max-width:100%;max-height:100%;border-radius:10px;object-fit:contain}
+.lightbox{position:fixed;inset:0;z-index:70;background:rgba(5,10,30,.94);display:grid;place-items:center;padding:12px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.lightbox img{max-width:100%;max-height:100%;border-radius:10px;object-fit:contain;transform-origin:center center;will-change:transform;touch-action:none;-webkit-user-drag:none;user-select:none;cursor:grab}
+.lightbox img.grabbing{cursor:grabbing}
+.lb-tools{position:absolute;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px)}
+.lb-btn{min-width:42px;height:38px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:#fff;font:600 18px/1 inherit;font-family:inherit;cursor:pointer}
+.lb-btn:active{background:rgba(255,255,255,.2)}
 .lb-x{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:26px;line-height:1}
 .ico img{width:100%;height:100%;object-fit:cover;border-radius:22%;display:block}
 @media (max-width:700px){.fgrid{grid-template-columns:1fr}.shot img{height:160px}}
@@ -332,6 +336,13 @@ label:focus-within .sr+*{outline:none}
   .dots button{width:7px;height:7px}
   .dots button[aria-current="true"]{width:18px}
 }
+/* Admin di header, paling kanan */
+.nav .n-admin{margin-left:auto}
+.nav{flex-wrap:nowrap}
+@media (min-width:701px){.nav{justify-content:flex-start}}
+main#root{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
+.prose a{color:var(--link);font-weight:600}
+.prose .tagline{margin-top:18px;padding:12px 16px;border-left:4px solid var(--link);background:var(--surface2);border-radius:0 12px 12px 0;font-weight:600;font-style:italic}
 </style>
 </head>
 <body>
@@ -390,8 +401,7 @@ I.img='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="
 I.plus='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
 
 
-var HEADER="<header class=\"top\">\n    <a class=\"brand\" href=\"#beranda\" aria-label=\"Genesis Tech Store, ke beranda\">\n      <svg viewBox=\"0 0 64 48\" aria-hidden=\"true\"><defs><linearGradient id=\"lg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#3b8bff\"/><stop offset=\"1\" stop-color=\"#0b46c9\"/></linearGradient></defs><circle cx=\"20\" cy=\"30\" r=\"14\" fill=\"url(#lg)\"/><circle cx=\"34\" cy=\"20\" r=\"17\" fill=\"url(#lg)\"/><circle cx=\"48\" cy=\"31\" r=\"12\" fill=\"url(#lg)\"/><rect x=\"20\" y=\"30\" width=\"28\" height=\"13\" fill=\"url(#lg)\"/><rect x=\"30\" y=\"13\" width=\"7\" height=\"17\" rx=\"1\" fill=\"#fff\"/><path d=\"M23 28h21l-10.5 11z\" fill=\"#fff\"/></svg>\n      <span><b>Genesis Tech Store</b><small>Pusat Download Aplikasi</small></span>\n    </a>\n    <nav class=\"nav\" aria-label=\"Menu utama\">\n      <a href=\"#beranda\" id=\"n-home\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 3 2 12h3v8h5v-5h4v5h5v-8h3z\"/></svg>Beranda</a>\n      <a href=\"#tentang\" id=\"n-about\">Tentang</a>\n      <a href=\"#bantuan\" id=\"n-help\">Bantuan</a>\n    </nav>\n  </header>";
-var FOOTER="<footer class=\"foot\">\n    <div class=\"social\" id=\"social\"></div>\n    <div class=\"f-bot\">\n      <span>© 2026 Genesis Tech Store. Semua hak cipta dilindungi.</span>\n      <nav aria-label=\"Tautan footer\"><a href=\"#tentang\">Tentang</a><a href=\"#privasi\">Kebijakan Privasi</a><a href=\"#bantuan\">Kontak</a><a href=\"#admin\">Admin</a></nav>\n    </div>\n  </footer>";
+var HEADER="<header class=\"top\">\n    <a class=\"brand\" href=\"#beranda\" aria-label=\"Genesis Tech Store, ke beranda\">\n      <svg viewBox=\"0 0 64 48\" aria-hidden=\"true\"><defs><linearGradient id=\"lg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#3b8bff\"/><stop offset=\"1\" stop-color=\"#0b46c9\"/></linearGradient></defs><circle cx=\"20\" cy=\"30\" r=\"14\" fill=\"url(#lg)\"/><circle cx=\"34\" cy=\"20\" r=\"17\" fill=\"url(#lg)\"/><circle cx=\"48\" cy=\"31\" r=\"12\" fill=\"url(#lg)\"/><rect x=\"20\" y=\"30\" width=\"28\" height=\"13\" fill=\"url(#lg)\"/><rect x=\"30\" y=\"13\" width=\"7\" height=\"17\" rx=\"1\" fill=\"#fff\"/><path d=\"M23 28h21l-10.5 11z\" fill=\"#fff\"/></svg>\n      <span><b>Genesis Tech Store</b><small>Pusat Download Aplikasi</small></span>\n    </a>\n    <nav class=\"nav\" aria-label=\"Menu utama\">\n      <a href=\"#beranda\" id=\"n-home\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 3 2 12h3v8h5v-5h4v5h5v-8h3z\"/></svg>Beranda</a>\n      <a href=\"#tentang\" id=\"n-about\">Tentang</a>\n      <a href=\"#bantuan\" id=\"n-help\">Bantuan</a>\n      <a href=\"#admin\" id=\"n-admin\" class=\"n-admin\">Admin</a>\n    </nav>\n  </header>";
 var SOC={"YouTube":"<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3z\"/></svg>","Facebook":"<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z\"/></svg>","Telegram":"<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M21.9 4.4 18.7 19c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 12.7 1.8 11.2c-1-.3-1-1 .2-1.5L20.400 2.600c.9-.3 1.700.2 1.500 1.800z\"/></svg>"};
 
 var $=function(s){return document.querySelector(s)};
@@ -427,18 +437,18 @@ var state={cat:'Semua',q:''},timer=null,slide=0,lastView='';
 var saving=false,draft=null,editing=false,curApp=null;
 var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-$('#app').innerHTML='<div class="wrap">'+HEADER+'<main id="root"></main>'+FOOTER+'</div>'+
+$('#app').innerHTML='<div class="wrap">'+HEADER+'<main id="root"></main></div>'+
   '<div class="toast" id="toast" hidden role="status"></div>'+
-  '<div class="lightbox" id="lb" hidden><button class="lb-x" type="button" aria-label="Tutup pratinjau">&times;</button><img id="lbimg" alt="Pratinjau aplikasi"></div>';
+  '<div class="lightbox" id="lb" hidden><button class="lb-x" type="button" aria-label="Tutup pratinjau">&times;</button><img id="lbimg" alt="Pratinjau aplikasi" draggable="false"><div class="lb-tools"><button class="lb-btn" type="button" data-z="out" aria-label="Perkecil">&minus;</button><button class="lb-btn" type="button" data-z="reset" aria-label="Ukuran awal">1&times;</button><button class="lb-btn" type="button" data-z="in" aria-label="Perbesar">+</button></div></div>';
 root=$('#root');
 /* Header dan footer tetap di layar; ukurannya diukur agar isi halaman tidak tertutup. */
 function measure(){
   var t=document.querySelector('.top'),f=document.querySelector('.foot'),st=document.documentElement.style;
   if(t)st.setProperty('--hh',t.offsetHeight+'px');
-  if(f)st.setProperty('--fh',f.offsetHeight+'px');
+  st.setProperty('--fh',f?f.offsetHeight+'px':'0px');
 }
 measure();
-if(window.ResizeObserver){var ro=new ResizeObserver(measure);ro.observe(document.querySelector('.top'));ro.observe(document.querySelector('.foot'))}
+if(window.ResizeObserver){var ro=new ResizeObserver(measure);ro.observe(document.querySelector('.top'))}
 window.addEventListener('resize',measure);window.addEventListener('load',measure);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(measure);
 
@@ -520,11 +530,19 @@ function detailHTML(a){
    '<div class="d-body"><p>'+esc(a.desc||'')+'</p>'+feats+note+'</div></article>'+
    (others.length?'<div class="sec-head"><h2>Aplikasi Lainnya</h2></div><div class="apps">'+others.map(card).join('')+'</div>':'');
 }
+function contactHTML(){
+  var st=DATA.site||{},em=st.email||'',out='',soc='';
+  if(em)out+='<p>Kirim pertanyaan ke <a class="mono" href="mailto:'+esc(em)+'">'+esc(em)+'</a></p>';
+  [['youtube','YouTube'],['facebook','Facebook'],['telegram','Telegram']].forEach(function(q){
+    if(safeUrl(st[q[0]]))soc+=(soc?' &middot; ':'')+'<a href="'+esc(st[q[0]])+'" target="_blank" rel="noopener noreferrer">'+q[1]+'</a>';
+  });
+  if(soc)out+='<p>'+(em?'Atau hubungi lewat: ':'Hubungi kami lewat: ')+soc+'</p>';
+  return out||'<p>Informasi kontak belum tersedia.</p>';
+}
 function proseHTML(k){
-  var em=(DATA.site&&DATA.site.email)||'';
   var P={
-   tentang:'<h1>Tentang Genesis Tech Store</h1><p>Genesis Tech Store adalah pusat download aplikasi untuk sekolah dan pengguna umum. Setiap aplikasi punya halaman sendiri berisi ukuran file, versi, format, dan penjelasan fitur, sehingga Anda tahu apa yang diunduh sebelum menekan tombol.</p><h2>Yang tersedia</h2><p>Aplikasi pendidikan, alat bantu, dan game untuk Windows. Berkas berformat <span class="mono">.exe</span>.</p>',
-   bantuan:'<h1>Bantuan</h1><h2>Cara mengunduh</h2><p>Pilih aplikasi di beranda, buka halaman detailnya, lalu tekan Download Sekarang.</p><h2>Aplikasi tidak bisa dibuka</h2><p>Periksa spesifikasi minimum pada bagian Catatan di halaman aplikasi, lalu jalankan berkas sebagai administrator.</p><h2>Kontak</h2><p>'+(em?'Kirim pertanyaan ke <span class="mono">'+esc(em)+'</span>':'Hubungi kami lewat media sosial di bagian bawah halaman.')+'</p>',
+   tentang:'<h1>Tentang Genesis Tech Store</h1><p>Genesis Tech Store berawal dari pemikiran seseorang yang senang mencoba hal baru, mengeksplorasi teknologi, dan menciptakan sesuatu yang bermanfaat.</p><p>Berangkat dari visi untuk mempermudah pekerjaan dan aktivitas sehari-hari, berbagai aplikasi dikembangkan sebagai solusi yang praktis, sederhana, dan mudah digunakan.</p><p>Website ini hadir sebagai pusat unduhan untuk memudahkan pengguna menemukan dan mendapatkan berbagai aplikasi yang dikembangkan oleh Genesis Tech Store.</p><p class=\"tagline\">Berawal dari ide, dikembangkan dengan kreativitas, dan hadir untuk mempermudah aktivitas.</p>',
+   bantuan:'<h1>Bantuan</h1><h2>Cara mengunduh</h2><p>Pilih aplikasi di beranda, buka halaman detailnya, lalu tekan Download Sekarang.</p><h2>Aplikasi tidak bisa dibuka</h2><p>Periksa spesifikasi minimum pada bagian Catatan di halaman aplikasi, lalu jalankan berkas sebagai administrator.</p><h2>Kontak</h2>'+contactHTML(),
    privasi:'<h1>Kebijakan Privasi</h1><p>Genesis Tech Store tidak meminta akun untuk mengunduh aplikasi. Data pencarian hanya diproses di peramban Anda dan tidak dikirim ke server.</p><h2>Berkas unduhan</h2><p>Periksa ukuran dan versi berkas sebelum menjalankannya. Unduh hanya dari halaman resmi aplikasi di Genesis Tech Store.</p>'
   };
   return box(P[k]);
@@ -947,6 +965,7 @@ function route(){
   $('#n-home').classList.toggle('on',view==='home');
   $('#n-about').classList.toggle('on',view==='tentang');
   $('#n-help').classList.toggle('on',view==='bantuan');
+  $('#n-admin').classList.toggle('on',view.indexOf('admin')===0);
   document.title=app?app.name+' | Genesis Tech Store':'Genesis Tech Store';
   if(view!==lastView)window.scrollTo(0,0);
   lastView=view;
@@ -966,8 +985,11 @@ document.addEventListener('click',function(e){
   var dot=t.closest('#dots button');if(dot){clearInterval(timer);setSlide(+dot.dataset.i);return}
   if(t.closest('#cta')){goList();return}
   if(t.closest('#all')){state.cat='Semua';state.q='';buildMenu();refreshGrid();return}
-  var shot=t.closest('.shot');if(shot&&curApp){$('#lbimg').src=curApp.shots[+shot.dataset.i];$('#lb').hidden=false;return}
-  if(t.closest('#lb')){$('#lb').hidden=true;return}
+  var shot=t.closest('.shot');if(shot&&curApp){lbReset();$('#lbimg').src=curApp.shots[+shot.dataset.i];$('#lb').hidden=false;return}
+  var zb=t.closest('.lb-btn');
+  if(zb){var m=zb.dataset.z;if(m==='reset')lbReset();else zoomAt(Z.s*(m==='in'?1.5:1/1.5),0,0);return}
+  if(t.closest('.lb-x')){$('#lb').hidden=true;return}
+  if(t.closest('#lb'))return;
   var del=t.closest('[data-del]');
   if(del){
     if(del.dataset.armed){
@@ -981,6 +1003,74 @@ document.addEventListener('click',function(e){
     return;
   }
 });
+
+/* ===== Zoom gambar pratinjau (cubit 2 jari, geser, ketuk 2x, roda mouse) ===== */
+var Z={s:1,x:0,y:0,max:6,pts:{},d0:0,s0:1,mx:0,my:0,moved:false,tapT:0,sx:0,sy:0,tgt:null};
+function lbApply(){var im=$('#lbimg');if(im)im.style.transform='translate('+Z.x+'px,'+Z.y+'px) scale('+Z.s+')'}
+function lbReset(){Z.s=1;Z.x=0;Z.y=0;Z.pts={};Z.moved=false;lbApply()}
+function lbClamp(){
+  var im=$('#lbimg'),lb=$('#lb');
+  if(Z.s<=1.001){Z.s=1;Z.x=0;Z.y=0;return}
+  var mx=Math.max(0,(im.offsetWidth*Z.s-lb.clientWidth)/2)+40,
+      my=Math.max(0,(im.offsetHeight*Z.s-lb.clientHeight)/2)+40;
+  Z.x=Math.max(-mx,Math.min(mx,Z.x));Z.y=Math.max(-my,Math.min(my,Z.y));
+}
+function zoomAt(ns,fx,fy){
+  ns=Math.max(1,Math.min(Z.max,ns));var k=ns/Z.s;
+  Z.x=fx-(fx-Z.x)*k;Z.y=fy-(fy-Z.y)*k;Z.s=ns;lbClamp();lbApply();
+}
+function lbRel(cx,cy){var r=$('#lb').getBoundingClientRect();return{x:cx-r.left-r.width/2,y:cy-r.top-r.height/2}}
+function lbPts(){return Object.keys(Z.pts).map(function(k){return Z.pts[k]})}
+document.addEventListener('pointerdown',function(e){
+  var lb=e.target.closest&&e.target.closest('#lb');
+  if(!lb||lb.hidden||e.target.closest('.lb-btn,.lb-x'))return;
+  Z.pts[e.pointerId]={x:e.clientX,y:e.clientY};
+  var ps=lbPts();
+  if(ps.length===1){Z.moved=false;Z.sx=e.clientX;Z.sy=e.clientY;Z.tgt=e.target}
+  else if(ps.length===2){
+    Z.d0=Math.hypot(ps[0].x-ps[1].x,ps[0].y-ps[1].y)||1;Z.s0=Z.s;
+    Z.mx=(ps[0].x+ps[1].x)/2;Z.my=(ps[0].y+ps[1].y)/2;Z.moved=true;
+  }
+  if(Z.s>1)$('#lbimg').classList.add('grabbing');
+},true);
+document.addEventListener('pointermove',function(e){
+  var p=Z.pts[e.pointerId];if(!p)return;
+  var ps=lbPts();
+  if(ps.length>=2){
+    p.x=e.clientX;p.y=e.clientY;ps=lbPts();
+    var d=Math.hypot(ps[0].x-ps[1].x,ps[0].y-ps[1].y)||1,
+        mx=(ps[0].x+ps[1].x)/2,my=(ps[0].y+ps[1].y)/2;
+    Z.x+=mx-Z.mx;Z.y+=my-Z.my;Z.mx=mx;Z.my=my;
+    var f=lbRel(mx,my);zoomAt(Z.s0*d/Z.d0,f.x,f.y);
+  }else{
+    var dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
+    if(Math.hypot(e.clientX-Z.sx,e.clientY-Z.sy)>6)Z.moved=true;
+    if(Z.s>1){Z.x+=dx;Z.y+=dy;lbClamp();lbApply()}
+  }
+});
+function lbUp(e){
+  var p=Z.pts[e.pointerId];if(!p)return;
+  var was=lbPts().length;delete Z.pts[e.pointerId];
+  var im=$('#lbimg');if(im)im.classList.remove('grabbing');
+  var rest=lbPts();
+  if(rest.length===1){Z.sx=rest[0].x;Z.sy=rest[0].y;Z.moved=true}
+  if(was!==1||Z.moved||e.type==='pointercancel')return;
+  var onImg=Z.tgt&&Z.tgt.id==='lbimg',now=Date.now();
+  if(onImg){
+    if(now-Z.tapT<320){
+      Z.tapT=0;
+      if(Z.s>1)lbReset();else{var f=lbRel(e.clientX,e.clientY);zoomAt(2.5,f.x,f.y)}
+    }else Z.tapT=now;
+  }else{$('#lb').hidden=true}
+}
+document.addEventListener('pointerup',lbUp);
+document.addEventListener('pointercancel',lbUp);
+document.addEventListener('wheel',function(e){
+  var lb=e.target.closest&&e.target.closest('#lb');if(!lb||lb.hidden)return;
+  e.preventDefault();var f=lbRel(e.clientX,e.clientY);
+  zoomAt(Z.s*(e.deltaY<0?1.18:1/1.18),f.x,f.y);
+},{passive:false});
+window.addEventListener('resize',function(){lbClamp();lbApply()});
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){$('#lb').hidden=true}
 });
