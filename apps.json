@@ -1,27 +1,6 @@
 {
   "apps": [
     {
-      "id": "laporbosp",
-      "icon": "laporbosp",
-      "name": "LaporBOSP",
-      "cat": "Pendidikan",
-      "size": "45 MB",
-      "ver": "v1.0.0",
-      "tag": "Aplikasi Pelaporan Bantuan Operasional Sekolah",
-      "desc": "LaporBOSP adalah aplikasi untuk membantu sekolah dalam melakukan pelaporan penggunaan dana Bantuan Operasional Sekolah (BOSP) secara mudah, cepat dan akurat.",
-      "feats": [
-        "Pelaporan dana BOSP secara online dan offline",
-        "Laporan lebih cepat dan akurat",
-        "Data aman dan terintegrasi",
-        "Antarmuka sederhana dan mudah digunakan"
-      ],
-      "note": "Pastikan perangkat Anda memenuhi spesifikasi minimum untuk menjalankan aplikasi ini.",
-      "url": "",
-      "fmt": ".exe",
-      "iconImg": "",
-      "shots": []
-    },
-    {
       "id": "bunga-mekar",
       "icon": "bunga",
       "name": "Bunga Mekar",
