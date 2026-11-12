@@ -26,27 +26,6 @@
       ]
     },
     {
-      "id": "gam-block-jelly",
-      "icon": "jelly",
-      "name": "Gam Block Jelly",
-      "cat": "Game",
-      "size": "28 MB",
-      "ver": "v1.0.0",
-      "tag": "Game Puzzle Blok Jelly",
-      "desc": "Susun blok jelly warna-warni ke dalam nampan, cocokkan warna, dan selesaikan setiap level puzzle dengan skor tertinggi.",
-      "feats": [
-        "Puluhan level puzzle",
-        "Blok jelly dengan ekspresi lucu",
-        "Efek suara dan animasi penempatan",
-        "Bisa dimainkan tanpa internet"
-      ],
-      "note": "Disarankan memakai komputer dengan kartu grafis bawaan yang mendukung WebGL.",
-      "url": "",
-      "fmt": ".exe",
-      "iconImg": "",
-      "shots": []
-    },
-    {
       "id": "rimba",
       "icon": "rimba",
       "name": "Rimba",
