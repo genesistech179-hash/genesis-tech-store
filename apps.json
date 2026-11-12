@@ -24,27 +24,6 @@
         "img/lapor-bosp-04c9pv.jpg",
         "img/lapor-bosp-nd4apq.jpg"
       ]
-    },
-    {
-      "id": "abacaga",
-      "icon": "abacaga",
-      "name": "ABACAGA",
-      "cat": "Pendidikan",
-      "size": "10 MB",
-      "ver": "v1.0.0",
-      "tag": "Aplikasi Belajar Membaca",
-      "desc": "ABACAGA membantu siswa kelas awal belajar membaca lewat latihan bertahap dengan gambar dan suara.",
-      "feats": [
-        "Latihan membaca bertahap",
-        "Gambar dan suara pendukung",
-        "Catatan hasil belajar",
-        "Mudah dipakai anak-anak"
-      ],
-      "note": "Sambungkan speaker atau headphone agar suara latihan terdengar.",
-      "url": "",
-      "fmt": ".exe",
-      "iconImg": "",
-      "shots": []
     }
   ],
   "site": {
