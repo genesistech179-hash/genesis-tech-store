@@ -26,27 +26,6 @@
       ]
     },
     {
-      "id": "print-helper",
-      "icon": "printer",
-      "name": "Print Helper",
-      "cat": "Utilitas",
-      "size": "8 MB",
-      "ver": "v1.0.0",
-      "tag": "Alat Bantu Cetak Dokumen",
-      "desc": "Print Helper memudahkan Anda mengatur antrean cetak, ukuran kertas, dan cetak banyak berkas sekaligus.",
-      "feats": [
-        "Cetak banyak berkas sekaligus",
-        "Atur ukuran dan orientasi kertas",
-        "Pratinjau sebelum mencetak",
-        "Ukuran kecil dan cepat dibuka"
-      ],
-      "note": "Pastikan driver printer sudah terpasang di komputer Anda.",
-      "url": "",
-      "fmt": ".exe",
-      "iconImg": "",
-      "shots": []
-    },
-    {
       "id": "tools-sekolah",
       "icon": "tools",
       "name": "Tools Sekolah",
