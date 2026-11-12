@@ -26,27 +26,6 @@
       ]
     },
     {
-      "id": "rimba",
-      "icon": "rimba",
-      "name": "Rimba",
-      "cat": "Game",
-      "size": "120 MB",
-      "ver": "v1.0.0",
-      "tag": "Tebang Pohon, Bangun Camp",
-      "desc": "Rimba adalah game 3D bertahan hidup. Tebang pohon, kumpulkan bahan, buat kerajinan, dan bangun camp di desa Rimba.",
-      "feats": [
-        "Dunia 3D dengan hutan dan desa",
-        "Sistem kerajinan dan bertahan hidup",
-        "Bangun camp sesuka hati",
-        "Simpan progres permainan"
-      ],
-      "note": "Ukuran file cukup besar. Pastikan ruang penyimpanan Anda cukup sebelum mengunduh.",
-      "url": "",
-      "fmt": ".exe",
-      "iconImg": "",
-      "shots": []
-    },
-    {
       "id": "print-helper",
       "icon": "printer",
       "name": "Print Helper",
