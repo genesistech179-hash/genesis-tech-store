@@ -26,27 +26,6 @@
       ]
     },
     {
-      "id": "bunga-mekar",
-      "icon": "bunga",
-      "name": "Bunga Mekar",
-      "cat": "Pendidikan",
-      "size": "12 MB",
-      "ver": "v1.2.0",
-      "tag": "Aplikasi Administrasi Kelas",
-      "desc": "Bunga Mekar membantu guru mencatat data siswa, kehadiran, dan perkembangan belajar dalam satu aplikasi yang ringan.",
-      "feats": [
-        "Daftar hadir siswa harian",
-        "Catatan perkembangan belajar",
-        "Data tersimpan di komputer sendiri",
-        "Tampilan sederhana untuk pemula"
-      ],
-      "note": "Aplikasi berjalan di Windows 10 atau yang lebih baru.",
-      "url": "",
-      "fmt": ".exe",
-      "iconImg": "",
-      "shots": []
-    },
-    {
       "id": "gam-block-jelly",
       "icon": "jelly",
       "name": "Gam Block Jelly",
