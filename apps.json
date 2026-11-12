@@ -1,0 +1,178 @@
+{
+  "apps": [
+    {
+      "id": "laporbosp",
+      "icon": "laporbosp",
+      "name": "LaporBOSP",
+      "cat": "Pendidikan",
+      "size": "45 MB",
+      "ver": "v1.0.0",
+      "tag": "Aplikasi Pelaporan Bantuan Operasional Sekolah",
+      "desc": "LaporBOSP adalah aplikasi untuk membantu sekolah dalam melakukan pelaporan penggunaan dana Bantuan Operasional Sekolah (BOSP) secara mudah, cepat dan akurat.",
+      "feats": [
+        "Pelaporan dana BOSP secara online dan offline",
+        "Laporan lebih cepat dan akurat",
+        "Data aman dan terintegrasi",
+        "Antarmuka sederhana dan mudah digunakan"
+      ],
+      "note": "Pastikan perangkat Anda memenuhi spesifikasi minimum untuk menjalankan aplikasi ini.",
+      "url": "",
+      "fmt": ".exe",
+      "iconImg": "",
+      "shots": []
+    },
+    {
+      "id": "bunga-mekar",
+      "icon": "bunga",
+      "name": "Bunga Mekar",
+      "cat": "Pendidikan",
+      "size": "12 MB",
+      "ver": "v1.2.0",
+      "tag": "Aplikasi Administrasi Kelas",
+      "desc": "Bunga Mekar membantu guru mencatat data siswa, kehadiran, dan perkembangan belajar dalam satu aplikasi yang ringan.",
+      "feats": [
+        "Daftar hadir siswa harian",
+        "Catatan perkembangan belajar",
+        "Data tersimpan di komputer sendiri",
+        "Tampilan sederhana untuk pemula"
+      ],
+      "note": "Aplikasi berjalan di Windows 10 atau yang lebih baru.",
+      "url": "",
+      "fmt": ".exe",
+      "iconImg": "",
+      "shots": []
+    },
+    {
+      "id": "gam-block-jelly",
+      "icon": "jelly",
+      "name": "Gam Block Jelly",
+      "cat": "Game",
+      "size": "28 MB",
+      "ver": "v1.0.0",
+      "tag": "Game Puzzle Blok Jelly",
+      "desc": "Susun blok jelly warna-warni ke dalam nampan, cocokkan warna, dan selesaikan setiap level puzzle dengan skor tertinggi.",
+      "feats": [
+        "Puluhan level puzzle",
+        "Blok jelly dengan ekspresi lucu",
+        "Efek suara dan animasi penempatan",
+        "Bisa dimainkan tanpa internet"
+      ],
+      "note": "Disarankan memakai komputer dengan kartu grafis bawaan yang mendukung WebGL.",
+      "url": "",
+      "fmt": ".exe",
+      "iconImg": "",
+      "shots": []
+    },
+    {
+      "id": "rimba",
+      "icon": "rimba",
+      "name": "Rimba",
+      "cat": "Game",
+      "size": "120 MB",
+      "ver": "v1.0.0",
+      "tag": "Tebang Pohon, Bangun Camp",
+      "desc": "Rimba adalah game 3D bertahan hidup. Tebang pohon, kumpulkan bahan, buat kerajinan, dan bangun camp di desa Rimba.",
+      "feats": [
+        "Dunia 3D dengan hutan dan desa",
+        "Sistem kerajinan dan bertahan hidup",
+        "Bangun camp sesuka hati",
+        "Simpan progres permainan"
+      ],
+      "note": "Ukuran file cukup besar. Pastikan ruang penyimpanan Anda cukup sebelum mengunduh.",
+      "url": "",
+      "fmt": ".exe",
+      "iconImg": "",
+      "shots": []
+    },
+    {
+      "id": "print-helper",
+      "icon": "printer",
+      "name": "Print Helper",
+      "cat": "Utilitas",
+      "size": "8 MB",
+      "ver": "v1.0.0",
+      "tag": "Alat Bantu Cetak Dokumen",
+      "desc": "Print Helper memudahkan Anda mengatur antrean cetak, ukuran kertas, dan cetak banyak berkas sekaligus.",
+      "feats": [
+        "Cetak banyak berkas sekaligus",
+        "Atur ukuran dan orientasi kertas",
+        "Pratinjau sebelum mencetak",
+        "Ukuran kecil dan cepat dibuka"
+      ],
+      "note": "Pastikan driver printer sudah terpasang di komputer Anda.",
+      "url": "",
+      "fmt": ".exe",
+      "iconImg": "",
+      "shots": []
+    },
+    {
+      "id": "tools-sekolah",
+      "icon": "tools",
+      "name": "Tools Sekolah",
+      "cat": "Pendidikan",
+      "size": "15 MB",
+      "ver": "v1.1.0",
+      "tag": "Kumpulan Alat Bantu Tugas Sekolah",
+      "desc": "Tools Sekolah berisi alat kecil yang sering dipakai operator dan guru, seperti pengubah format berkas dan perapi data.",
+      "feats": [
+        "Beberapa alat dalam satu aplikasi",
+        "Tanpa instalasi rumit",
+        "Bekerja offline",
+        "Pembaruan rutin"
+      ],
+      "note": "Beberapa alat membutuhkan Microsoft Office terpasang.",
+      "url": "",
+      "fmt": ".exe",
+      "iconImg": "",
+      "shots": []
+    },
+    {
+      "id": "abacaga",
+      "icon": "abacaga",
+      "name": "ABACAGA",
+      "cat": "Pendidikan",
+      "size": "10 MB",
+      "ver": "v1.0.0",
+      "tag": "Aplikasi Belajar Membaca",
+      "desc": "ABACAGA membantu siswa kelas awal belajar membaca lewat latihan bertahap dengan gambar dan suara.",
+      "feats": [
+        "Latihan membaca bertahap",
+        "Gambar dan suara pendukung",
+        "Catatan hasil belajar",
+        "Mudah dipakai anak-anak"
+      ],
+      "note": "Sambungkan speaker atau headphone agar suara latihan terdengar.",
+      "url": "",
+      "fmt": ".exe",
+      "iconImg": "",
+      "shots": []
+    },
+    {
+      "id": "kalender-pendidikan",
+      "icon": "kalender",
+      "name": "Kalender Pendidikan",
+      "cat": "Pendidikan",
+      "size": "6 MB",
+      "ver": "v1.0.0",
+      "tag": "Kalender Akademik Sekolah",
+      "desc": "Kalender Pendidikan menampilkan hari efektif, libur, dan agenda sekolah sepanjang tahun ajaran.",
+      "feats": [
+        "Hari efektif dan hari libur",
+        "Agenda kegiatan sekolah",
+        "Tampilan bulanan yang jelas",
+        "Cetak kalender untuk papan informasi"
+      ],
+      "note": "Tanggal libur dapat berubah mengikuti keputusan resmi dinas pendidikan.",
+      "url": "",
+      "fmt": ".exe",
+      "iconImg": "",
+      "shots": []
+    }
+  ],
+  "site": {
+    "email": "",
+    "youtube": "",
+    "facebook": "",
+    "telegram": ""
+  }
+}

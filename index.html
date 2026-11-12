@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Genesis Tech Store</title>
+<meta name="description" content="Pusat download aplikasi Genesis Tech Store.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%231457e6%22%2F%3E%3Cpath%20d%3D%22M32%2014v22M21%2027l11%2011%2011-11M18%2048h28%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{color-scheme:light}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+/* Layout: header kartu yang menempel di atas, banner biru lebar, grid aplikasi 4 kolom, halaman detail berupa satu kartu besar. */
+:root{
+  --bg:#f1f6ff; --surface:#ffffff; --surface2:#eaf1ff; --fg:#0e1d47; --muted:#5a6a8e; --line:#d9e4fa;
+  --link:#1457e6; --btn1:#2a74ff; --btn2:#0f4fdc; --accent:#ffc61a; --accent-fg:#1a2250;
+  --navy:#0b1a49; --navy-fg:#dce6ff; --hero1:#0a3bb5; --hero2:#1f78ff;
+  --shadow:0 6px 24px rgba(20,60,160,.08); --bad:#c62828;
+  --font-display:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#080f2b; --surface:#111b45; --surface2:#182559; --fg:#e8eeff; --muted:#a2b2da; --line:#243570;
+    --link:#82aaff; --btn1:#3a7bff; --btn2:#1f5ae8; --navy:#060b20; --hero1:#0a2d8c; --hero2:#1a5fe0;
+    --shadow:0 6px 24px rgba(0,0,0,.35); --bad:#ff8a8a; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#080f2b; --surface:#111b45; --surface2:#182559; --fg:#e8eeff; --muted:#a2b2da; --line:#243570;
+  --link:#82aaff; --btn1:#3a7bff; --btn2:#1f5ae8; --navy:#060b20; --hero1:#0a2d8c; --hero2:#1a5fe0;
+  --shadow:0 6px 24px rgba(0,0,0,.35); --bad:#ff8a8a; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 var(--font-body);
+  padding-block:12px 28px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--link);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1120px;margin:0 auto}
+svg{display:block}
+
+/* Header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px 16px;
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:10px 16px;box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{width:46px;height:34px;flex:none}
+.brand b{display:block;font:800 18px/1.05 var(--font-display);letter-spacing:-.02em}
+.brand small{display:block;font-size:10.5px;font-weight:600;color:var(--link);margin-top:3px;white-space:nowrap}
+.nav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+.nav a,.nav .catbtn{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:8px 13px;border-radius:999px;font:600 13.5px var(--font-display)}
+.nav a:hover,.nav .catbtn:hover{background:var(--surface2)}
+.nav a.on,.nav .catbtn.on{background:linear-gradient(180deg,var(--btn1),var(--btn2));color:#fff}
+.nav svg{width:15px;height:15px}
+.cat{position:relative}
+.menu{position:absolute;top:calc(100% + 8px);left:0;min-width:170px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:6px;z-index:50}
+.menu button{display:block;width:100%;text-align:left;border:0;background:none;padding:9px 12px;border-radius:9px;font:500 14px var(--font-body)}
+.menu button:hover,.menu button[aria-current="true"]{background:var(--surface2);color:var(--link);font-weight:600}
+.search{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:0 6px 0 14px;width:250px}
+.search input{flex:1;min-width:0;border:0;background:none;color:var(--fg);font:14px var(--font-body);padding:9px 0;outline:none}
+.search input::placeholder{color:var(--muted)}
+.search:focus-within{outline:3px solid var(--link);outline-offset:1px}
+.search button{border:0;background:none;display:grid;place-items:center;width:34px;height:34px;color:var(--link)}
+.search svg{width:19px;height:19px}
+
+/* Banner */
+.hero{position:relative;overflow:hidden;margin-top:16px;border-radius:24px;color:#fff;padding:44px 44px 56px;
+  background:linear-gradient(115deg,var(--hero1),var(--hero2));display:grid;grid-template-columns:1.1fr .9fr;gap:12px;align-items:center}
+.hero::after{content:"";position:absolute;right:-90px;bottom:-140px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.07)}
+.hero-copy{position:relative;z-index:1;min-width:0}
+.hero h1{margin:0;font:800 clamp(28px,4.6vw,46px)/1.1 var(--font-display);letter-spacing:-.025em;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{margin:14px 0 22px;font-size:clamp(15px,1.9vw,18px);max-width:34ch;color:rgba(255,255,255,.92)}
+.cta{display:inline-flex;align-items:center;gap:10px;border:0;background:var(--accent);color:var(--accent-fg);font:700 15px var(--font-display);padding:13px 22px;border-radius:999px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.cta:hover{filter:brightness(1.05)}
+.cta svg{width:18px;height:18px}
+.hero-art{position:relative;z-index:1;justify-self:end;width:100%;max-width:400px}
+.dots{position:absolute;left:44px;bottom:22px;display:flex;gap:8px;z-index:2}
+.dots button{width:10px;height:10px;padding:0;border:0;border-radius:99px;background:rgba(255,255,255,.5)}
+.dots button[aria-current="true"]{background:#fff;width:24px}
+.fade{animation:fade .4s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Daftar aplikasi */
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:34px 0 16px}
+.sec-head h2{margin:0;font:800 clamp(22px,3vw,28px)/1.2 var(--font-display);border-left:4px solid var(--btn2);padding-left:12px;letter-spacing:-.01em}
+.pill{border:0;background:var(--surface2);color:var(--link);font:600 13px var(--font-display);padding:9px 16px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.pill:hover{filter:brightness(.97)}
+.pill svg{width:15px;height:15px}
+.apps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 14px 14px;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.ico{display:block;width:76px;height:76px}
+.ico svg{width:100%;height:100%}
+.card b{font:700 15px/1.25 var(--font-display);margin-top:4px;overflow-wrap:anywhere}
+.meta{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:12.5px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.meta i{width:1px;height:12px;background:var(--line)}
+.meta svg{width:14px;height:14px;display:inline-block;vertical-align:-2px;margin-right:3px}
+.dl{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin-top:6px;padding:9px 10px;border-radius:10px;color:#fff;font:600 13.5px var(--font-display);background:linear-gradient(180deg,var(--btn1),var(--btn2))}
+.dl svg{width:15px;height:15px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 12px;background:var(--surface);border:1px dashed var(--line);border-radius:18px}
+
+/* Detail */
+.crumb{display:flex;align-items:center;gap:8px;margin:20px 4px 14px;font-size:14px;color:var(--muted);flex-wrap:wrap}
+.crumb a{color:var(--link);font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.crumb svg{width:16px;height:16px}
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:30px;box-shadow:var(--shadow)}
+.d-top{display:flex;gap:26px;align-items:center}
+.d-top .ico{width:150px;height:150px;flex:none}
+.d-top h1{margin:0;font:800 clamp(30px,4.4vw,42px)/1.1 var(--font-display);letter-spacing:-.025em}
+.d-tag{margin:6px 0 16px;font:700 clamp(16px,2vw,20px)/1.3 var(--font-display);color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:14px 0}
+.fact{display:flex;align-items:center;gap:10px;padding:0 22px;border-left:1px solid var(--line)}
+.fact:first-child{padding-left:0;border-left:0}
+.fact svg{width:28px;height:28px;color:var(--btn2);flex:none}
+.fact small{display:block;font-size:13px;color:var(--muted);line-height:1.2}
+.fact b{display:block;font:700 16px/1.3 var(--font-display);font-variant-numeric:tabular-nums}
+.d-dl{display:flex;flex-direction:column;align-items:center;gap:10px;margin:28px 0 22px}
+.big{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-width:min(100%,340px);padding:16px 30px;border-radius:16px;color:#fff;font:700 19px var(--font-display);background:linear-gradient(180deg,var(--btn1),var(--btn2));box-shadow:0 8px 20px rgba(20,80,220,.3)}
+.big:hover{filter:brightness(1.06)}
+.big svg{width:24px;height:24px}
+.hint{margin:0;font-size:13.5px;color:var(--muted);text-align:center}
+.bar{display:flex;align-items:center;gap:12px;background:var(--surface2);border-radius:12px;padding:13px 16px;margin-top:8px}
+.bar svg{width:26px;height:26px;color:var(--btn2);flex:none}
+.bar h2{margin:0;font:700 18px var(--font-display)}
+.d-body{padding:16px 6px 0}
+.d-body p{margin:0 0 14px;font-size:16.5px;max-width:70ch}
+.d-body h3{margin:18px 0 10px;font:700 18px var(--font-display);color:var(--link)}
+.feats{list-style:none;margin:0 0 20px;padding:0;display:grid;gap:10px}
+.feats li{display:flex;align-items:center;gap:12px;font-size:16px}
+.feats svg{width:22px;height:22px;flex:none;color:var(--btn2)}
+.note{display:flex;gap:14px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.note svg{width:26px;height:26px;color:var(--btn2);flex:none;margin-top:2px}
+.note b{display:block;font:700 16px var(--font-display);color:var(--link)}
+.note span{font-size:15px}
+
+/* Halaman teks */
+.prose{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:30px;margin-top:20px;box-shadow:var(--shadow)}
+.prose h1{margin:0 0 14px;font:800 clamp(26px,4vw,36px)/1.15 var(--font-display);letter-spacing:-.02em}
+.prose h2{margin:22px 0 6px;font:700 18px var(--font-display);color:var(--link)}
+.prose p{margin:0 0 10px;max-width:68ch}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;background:var(--surface2);padding:2px 7px;border-radius:6px;user-select:all}
+
+/* Footer */
+.foot{position:relative;overflow:hidden;margin-top:36px;background:var(--navy);color:var(--navy-fg);border-radius:24px;padding:30px 30px 22px}
+.foot::before{content:"";position:absolute;left:-10%;right:-10%;top:-26px;height:48px;border-radius:50%;background:rgba(42,116,255,.28)}
+.f-row{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:18px 28px;align-items:center}
+.foot .brand b{color:#fff}
+.foot .brand small{color:#8fb3ff}
+.f-tag{margin:0;font-size:14px;max-width:30ch;border-left:1px solid rgba(255,255,255,.18);padding-left:28px}
+.social{display:flex;align-items:center;gap:10px}
+.social span{font-size:13px;font-weight:600;margin-right:4px}
+.social a{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);color:#fff}
+.social a:hover{background:rgba(255,255,255,.2)}
+.social svg{width:20px;height:20px}
+.f-bot{position:relative;display:flex;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12);font-size:12.5px}
+.f-bot nav{display:flex;gap:16px;flex-wrap:wrap}
+.f-bot a:hover{text-decoration:underline}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;max-width:min(92vw,420px);
+  background:var(--navy);color:#fff;border-radius:14px;padding:12px 18px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);text-align:center}
+
+@media (max-width:960px){.apps{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:860px){
+  .top{grid-template-columns:1fr auto}
+  .nav{grid-column:1/-1;grid-row:2;justify-content:flex-start}
+  .search{width:min(250px,48vw)}
+  .f-row{grid-template-columns:1fr}
+  .f-tag{border-left:0;padding-left:0}
+}
+@media (max-width:700px){
+  .apps{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .hero{grid-template-columns:1fr;padding:28px 22px 52px}
+  .hero-art{justify-self:center;max-width:300px}
+  .dots{left:22px}
+  .detail,.prose{padding:20px}
+  .d-top{flex-direction:column;align-items:flex-start;gap:16px}
+  .d-top .ico{width:110px;height:110px}
+  .fact{padding:0 14px}
+  .search{width:100%;grid-column:1/-1}
+  .brand small{white-space:normal}
+}
+@media (max-width:420px){.card{padding:14px 10px 12px}.ico{width:64px;height:64px}.fact{padding:0 10px}.fact:first-child{padding-left:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Portal admin */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:10px;padding:9px 16px;font:600 13.5px var(--font-display);color:#fff;background:linear-gradient(180deg,var(--btn1),var(--btn2));cursor:pointer;position:relative}
+.btn svg{width:15px;height:15px}
+.btn.ghost{background:var(--surface2);color:var(--link);border-color:var(--line)}
+.btn.danger{background:transparent;color:var(--bad);border-color:var(--bad)}
+.btn[disabled]{opacity:.55;cursor:wait}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+label:focus-within .sr+*{outline:none}
+.btn:has(.sr:focus-visible),.thumb.add:has(.sr:focus-visible){outline:3px solid var(--link);outline-offset:2px}
+.adm-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:22px 0 10px}
+.adm-top h1,.adm-h{margin:0;font:800 clamp(24px,3.4vw,32px)/1.15 var(--font-display);letter-spacing:-.02em}
+.adm-note{color:var(--muted);font-size:14px;margin:0 0 16px;max-width:72ch}
+.adm-list{display:grid;gap:10px}
+.adm-row{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;flex-wrap:wrap}
+.adm-row .ico{width:52px;height:52px;flex:none}
+.adm-info{flex:1;min-width:180px}
+.adm-info b{display:block;font:700 16px var(--font-display);overflow-wrap:anywhere}
+.adm-info span{font-size:13px;color:var(--muted)}
+.adm-act{display:flex;gap:8px;flex-wrap:wrap}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px;margin-top:16px}
+.f{display:flex;flex-direction:column;gap:6px;min-width:0}
+.f.full{grid-column:1/-1}
+.f>span{font:600 13px var(--font-display)}
+.f small{color:var(--muted);font-size:12.5px}
+.f input,.f textarea{width:100%;font:15px var(--font-body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.f textarea{resize:vertical;min-height:96px}
+.f input:focus,.f textarea:focus{outline:3px solid var(--link);outline-offset:1px}
+.f .f{gap:6px}
+.media{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.media .ico{width:84px;height:84px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.thumb{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/10;background:var(--surface2)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(0,0,0,.7);color:#fff;font-size:18px;line-height:1;padding:0}
+.thumb.add{display:grid;place-items:center;border-style:dashed;cursor:pointer;color:var(--link);font:600 13px var(--font-display);text-align:center}
+.thumb.add span{display:flex;flex-direction:column;align-items:center;gap:4px}
+.thumb.add svg{width:20px;height:20px}
+.ferr{color:var(--bad);font-weight:600;margin:12px 0 0;min-height:1.4em}
+.form-act{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.form-act .btn{padding:12px 22px;font-size:15px}
+.shots{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding:14px 4px 10px;margin-bottom:6px}
+.shot{flex:none;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface2);scroll-snap-align:start;cursor:zoom-in}
+.shot img{display:block;height:200px;width:auto;max-width:none}
+.lightbox{position:fixed;inset:0;z-index:70;background:rgba(5,10,30,.9);display:grid;place-items:center;padding:24px;cursor:zoom-out}
+.lightbox img{max-width:100%;max-height:100%;border-radius:10px;object-fit:contain}
+.lb-x{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:26px;line-height:1}
+.ico img{width:100%;height:100%;object-fit:cover;border-radius:22%;display:block}
+@media (max-width:700px){.fgrid{grid-template-columns:1fr}.shot img{height:160px}}
+
+</style>
+</head>
+<body>
+<noscript>Aktifkan JavaScript untuk melihat halaman ini.</noscript>
+<div id="app"></div>
+<script>
+(function(){
+'use strict';
+var I={
+  dl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3 2 12h3v8h5v-5h4v5h5v-8h3z"/></svg>',
+  db:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 8.5c0 1.7 3.6 3 8 3s8-1.3 8-3v4c0 1.700-3.600 3-8 3s-8-1.300-8-3z"/><path d="M4 14.500c0 1.700 3.600 3 8 3s8-1.300 8-3v4c0 1.700-3.600 3-8 3s-8-1.300-8-3z"/></svg>',
+  tag:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 12.600V4a1 1 0 0 1 1-1h8.600a1 1 0 0 1 .7.300l7.400 7.400a1 1 0 0 1 0 1.400l-8.600 8.600a1 1 0 0 1-1.400 0L3.300 13.300a1 1 0 0 1-.3-.7zM8 6.500a1.500 1.500 0 1 0 0 3 1.500 1.500 0 0 0 0-3z"/></svg>',
+  file:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M14 2v6h6" fill="#fff" fill-opacity=".45"/><rect x="8" y="13" width="8" height="1.800" rx=".9" fill="#fff"/><rect x="8" y="16.500" width="6" height="1.800" rx=".9" fill="#fff"/></svg>',
+  doc:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><rect x="7" y="8" width="10" height="1.800" rx=".9" fill="#fff"/><rect x="7" y="11.500" width="10" height="1.800" rx=".9" fill="#fff"/><rect x="7" y="15" width="6" height="1.800" rx=".9" fill="#fff"/></svg>',
+  check:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="m7 12.500 3.200 3.200L17 9" fill="none" stroke="#fff" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  info:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><circle cx="12" cy="7.500" r="1.600" fill="#fff"/><rect x="10.800" y="10.500" width="2.400" height="7" rx="1.200" fill="#fff"/></svg>'
+};
+
+
+/* Ikon aplikasi (SVG bawaan, bisa diganti gambar sendiri) */
+var petals=['#ff5d8f','#ffb020','#ffe14d','#4cc36a','#2f8bff','#9b5cff'].map(function(c,i){
+  return '<g transform="rotate('+(i*60)+' 32 32)"><ellipse cx="32" cy="16.500" rx="7.500" ry="12" fill="'+c+'"/></g>';}).join('');
+var ICON={
+  laporbosp:'<svg viewBox="0 0 64 64"><defs><linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f7bff"/><stop offset="1" stop-color="#0b46c9"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#gA)"/><path d="M32 22 41 17 32 12 23 17z" fill="#ffc61a"/><path d="M26 20v5q6 3.500 12 0v-5l-6 3z" fill="#f0a800"/><path d="M11 29q10-3.500 21 2v21q-11-5.500-21-2z" fill="#fff"/><path d="M53 29q-10-3.500-21 2v21q11-5.500 21-2z" fill="#fff"/><path d="M32 31v21" stroke="#2f7bff" stroke-width="2"/><path d="M15 34q6-1.500 12 1M15 40q6-1.500 12 1M49 34q-6-1.500-12 1M49 40q-6-1.500-12 1" stroke="#9db9ee" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+  bunga:'<svg viewBox="0 0 64 64">'+petals+'<circle cx="32" cy="32" r="6.500" fill="#fff"/><circle cx="32" cy="32" r="3" fill="#ffd24a"/></svg>',
+  jelly:'<svg viewBox="0 0 64 64"><path d="M14 20h36q9 0 11 15 2 14-6 14-7 0-10-9H19q-3 9-10 9-8 0-6-14 2-15 11-15z" fill="#2457d6"/><path d="M14 20h36q4 0 7 3-3-8-12-8H19q-9 0-12 8 3-3 7-3z" fill="#3d74f0"/><rect x="15" y="28" width="12" height="4" rx="1.500" fill="#fff"/><rect x="19" y="24" width="4" height="12" rx="1.500" fill="#fff"/><circle cx="42" cy="26" r="3.200" fill="#ffc61a"/><circle cx="49" cy="32" r="3.200" fill="#3ddc84"/><circle cx="42" cy="38" r="3.200" fill="#ff5d6c"/><circle cx="35" cy="32" r="3.200" fill="#5fd0ff"/></svg>',
+  rimba:'<svg viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#bfe3ff"/><path d="M0 44q16-12 32-4t32-4v28H0z" fill="#58b552"/><rect x="14" y="40" width="5" height="12" fill="#7a4b2a"/><path d="M16.500 12 7 30h19zM16.500 22 5 40h23z" fill="#1f7a3a"/><rect x="42" y="38" width="5" height="14" fill="#7a4b2a"/><path d="M44.500 8 34 28h21zM44.500 20 32 40h25z" fill="#2a9246"/><rect x="29" y="42" width="4" height="10" fill="#7a4b2a"/><path d="M31 26 24 42h14z" fill="#35a352"/></svg>',
+  printer:'<svg viewBox="0 0 64 64"><rect x="18" y="5" width="28" height="22" rx="3" fill="#cfe3ff" stroke="#8ab4f0" stroke-width="2"/><path d="M23 12h18M23 17h18" stroke="#8ab4f0" stroke-width="2" stroke-linecap="round"/><rect x="5" y="24" width="54" height="26" rx="7" fill="#2457d6"/><rect x="5" y="24" width="54" height="9" rx="4.500" fill="#3d74f0"/><circle cx="50" cy="38" r="2.500" fill="#7dffb0"/><rect x="16" y="44" width="32" height="14" rx="2" fill="#fff" stroke="#8ab4f0" stroke-width="2"/><path d="M21 50h22M21 54h14" stroke="#8ab4f0" stroke-width="2" stroke-linecap="round"/></svg>',
+  tools:'<svg viewBox="0 0 64 64"><g transform="rotate(45 32 32)"><rect x="28.500" y="20" width="7" height="40" rx="3.500" fill="#7f95ba"/><circle cx="32" cy="13" r="10" fill="none" stroke="#6f86ad" stroke-width="7"/><rect x="29" y="1" width="6" height="11" fill="var(--surface)"/></g><g transform="rotate(-45 32 32)"><rect x="28" y="2" width="8" height="10" rx="1.500" fill="#2f9bff"/><rect x="26" y="10" width="12" height="26" rx="5" fill="#ff9a1f"/><rect x="30.500" y="34" width="3" height="26" rx="1.500" fill="#7f95ba"/></g></svg>',
+  abacaga:'<svg viewBox="0 0 64 64"><path d="M4 14q14-4 28 3v38Q18 48 4 52z" fill="#1d4fc9"/><path d="M60 14q-14-4-28 3v38q14-7 28-3z" fill="#1d4fc9"/><path d="M8 17q12-3 24 3v32Q20 47 8 50z" fill="#ffc61a"/><path d="M56 17q-12-3-24 3v32q12-5 24-2z" fill="#ffd95a"/><path d="M32 20v32" stroke="#e29a00" stroke-width="2"/><path d="M13 25q6-1 12 1.500M13 31q6-1 12 1.500M13 37q6-1 12 1.500M51 25q-6-1-12 1.500M51 31q-6-1-12 1.500M51 37q-6-1-12 1.500" stroke="#c98500" stroke-width="1.800" fill="none" stroke-linecap="round"/></svg>',
+  kalender:'<svg viewBox="0 0 64 64"><rect x="6" y="9" width="52" height="50" rx="9" fill="#fff" stroke="#2457d6" stroke-width="4"/><path d="M6 24V18a9 9 0 0 1 9-9h34a9 9 0 0 1 9 9v6z" fill="#2457d6"/><rect x="18" y="3" width="6" height="14" rx="3" fill="#143a9c"/><rect x="40" y="3" width="6" height="14" rx="3" fill="#143a9c"/><text x="32" y="51" text-anchor="middle" font-family="Plus Jakarta Sans,system-ui,sans-serif" font-weight="800" font-size="26" fill="#2457d6">31</text></svg>'
+};
+
+
+var SLIDES=[
+ {h:'Download Aplikasi <em>Terbaik</em> di Sini!',p:'Aplikasi berkualitas, aman dan terpercaya untuk kebutuhan Anda.'},
+ {h:'Aplikasi Sekolah, <em>Ringan</em> dan Mudah',p:'Alat bantu untuk guru dan operator sekolah, siap diunduh.'},
+ {h:'Game Seru, <em>Langsung</em> Main',p:'Puzzle jelly sampai petualangan bertahan hidup di Rimba.'}
+];
+
+
+var heroArt='<svg class="hero-art" viewBox="0 0 420 300" aria-hidden="true"><defs><linearGradient id="scr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b8bff"/><stop offset="1" stop-color="#0c47d1"/></linearGradient></defs>'+
+ '<path d="M70 222h290l-14 16H84z" fill="#c9d4ea"/><rect x="100" y="42" width="232" height="170" rx="12" fill="#e9eef7"/><rect x="109" y="51" width="214" height="152" rx="6" fill="url(#scr)"/>'+
+ '<circle cx="190" cy="140" r="17" fill="#fff"/><circle cx="214" cy="128" r="24" fill="#fff"/><circle cx="240" cy="141" r="17" fill="#fff"/><rect x="190" y="140" width="50" height="17" fill="#fff"/>'+
+ '<rect x="210.500" y="112" width="9" height="28" rx="1.500" fill="#1457e6"/><path d="M199 136h31l-15.500 17z" fill="#1457e6"/>'+
+ '<g transform="translate(300 40)"><rect x="-30" y="-30" width="60" height="60" rx="16" fill="#2a74ff"/><circle r="9" fill="none" stroke="#fff" stroke-width="5"/><circle r="15" fill="none" stroke="#fff" stroke-width="5" stroke-dasharray="5.500 7.800"/></g>'+
+ '<g transform="translate(62 118)"><path d="M0-30 25-21V6C25 22 11 30 0 35-11 30-25 22-25 6V-21z" fill="#2fb56b"/><path d="m-11 3 8 8 14-16" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>'+
+ '<g transform="translate(28 190)"><rect width="64" height="64" rx="14" fill="#fff"/><rect x="11" y="11" width="20" height="20" rx="3" fill="#f35325"/><rect x="33" y="11" width="20" height="20" rx="3" fill="#81bc06"/><rect x="11" y="33" width="20" height="20" rx="3" fill="#05a6f0"/><rect x="33" y="33" width="20" height="20" rx="3" fill="#ffba08"/></g>'+
+ '<path d="m348 18 10-14 4 5zM366 38l18-10 2 6zM340 44l6-18 5 2z" fill="#ffc61a"/></svg>';
+
+
+I.img='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2" fill="#fff"/><path d="m4 18 5-5 3 3 3-4 5 6z" fill="#fff" fill-opacity=".85"/></svg>';
+I.plus='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+
+
+var HEADER="<header class=\"top\">\n    <a class=\"brand\" href=\"#beranda\" aria-label=\"Genesis Tech Store, ke beranda\">\n      <svg viewBox=\"0 0 64 48\" aria-hidden=\"true\"><defs><linearGradient id=\"lg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#3b8bff\"/><stop offset=\"1\" stop-color=\"#0b46c9\"/></linearGradient></defs><circle cx=\"20\" cy=\"30\" r=\"14\" fill=\"url(#lg)\"/><circle cx=\"34\" cy=\"20\" r=\"17\" fill=\"url(#lg)\"/><circle cx=\"48\" cy=\"31\" r=\"12\" fill=\"url(#lg)\"/><rect x=\"20\" y=\"30\" width=\"28\" height=\"13\" fill=\"url(#lg)\"/><rect x=\"30\" y=\"13\" width=\"7\" height=\"17\" rx=\"1\" fill=\"#fff\"/><path d=\"M23 28h21l-10.5 11z\" fill=\"#fff\"/></svg>\n      <span><b>Genesis Tech Store</b><small>Pusat Download Aplikasi</small></span>\n    </a>\n    <nav class=\"nav\" aria-label=\"Menu utama\">\n      <a href=\"#beranda\" id=\"n-home\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 3 2 12h3v8h5v-5h4v5h5v-8h3z\"/></svg>Beranda</a>\n      <div class=\"cat\">\n        <button class=\"catbtn\" id=\"catbtn\" aria-haspopup=\"true\" aria-expanded=\"false\">Kategori <svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6z\"/></svg></button>\n        <div class=\"menu\" id=\"catmenu\" hidden></div>\n      </div>\n      <a href=\"#tentang\" id=\"n-about\">Tentang</a>\n      <a href=\"#bantuan\" id=\"n-help\">Bantuan</a>\n    </nav>\n    <form class=\"search\" id=\"searchform\" role=\"search\">\n      <input id=\"q\" type=\"search\" placeholder=\"Cari aplikasi...\" aria-label=\"Cari aplikasi\" autocomplete=\"off\">\n      <button type=\"submit\" aria-label=\"Cari\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-4-4\"/></svg></button>\n    </form>\n  </header>";
+var FOOTER="<footer class=\"foot\">\n    <div class=\"f-row\">\n      <div class=\"brand\">\n        <svg viewBox=\"0 0 64 48\" aria-hidden=\"true\"><circle cx=\"20\" cy=\"30\" r=\"14\" fill=\"url(#lg)\"/><circle cx=\"34\" cy=\"20\" r=\"17\" fill=\"url(#lg)\"/><circle cx=\"48\" cy=\"31\" r=\"12\" fill=\"url(#lg)\"/><rect x=\"20\" y=\"30\" width=\"28\" height=\"13\" fill=\"url(#lg)\"/><rect x=\"30\" y=\"13\" width=\"7\" height=\"17\" rx=\"1\" fill=\"#fff\"/><path d=\"M23 28h21l-10.5 11z\" fill=\"#fff\"/></svg>\n        <span><b>Genesis Tech Store</b><small>Pusat Download Aplikasi</small></span>\n      </div>\n      <p class=\"f-tag\">Download aplikasi dengan aman, cepat dan mudah.</p>\n      <div class=\"social\" id=\"social\"></div>\n    </div>\n    <div class=\"f-bot\">\n      <span>© 2026 Genesis Tech Store. Semua hak cipta dilindungi.</span>\n      <nav aria-label=\"Tautan footer\"><a href=\"#tentang\">Tentang</a><a href=\"#privasi\">Kebijakan Privasi</a><a href=\"#bantuan\">Kontak</a><a href=\"#admin\">Admin</a></nav>\n    </div>\n  </footer>";
+var SOC={"YouTube":"<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3z\"/></svg>","Facebook":"<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z\"/></svg>","Telegram":"<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M21.9 4.4 18.7 19c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 12.7 1.8 11.2c-1-.3-1-1 .2-1.5L20.400 2.600c.9-.3 1.700.2 1.500 1.800z\"/></svg>"};
+
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function safeUrl(u){return /^https?:\/\//i.test(u||'')}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function rand(){return Math.random().toString(36).slice(2,8)}
+/* Link Google Drive biasa diubah menjadi link unduh langsung. */
+function dlUrl(u){
+  var s=String(u||''),m=s.match(/drive\.google\.com\/file\/d\/([\w-]+)/)||s.match(/drive\.google\.com\/(?:open|uc)\?[^#]*?id=([\w-]+)/);
+  return m?'https://drive.google.com/uc?export=download&id='+m[1]:s;
+}
+
+/* ---------- Pengaturan GitHub (tersimpan di browser admin) ---------- */
+var CFG_KEY='gts-github';
+function cfg(){try{return JSON.parse(localStorage.getItem(CFG_KEY)||'{}')||{}}catch(e){return {}}}
+function saveCfg(c){try{localStorage.setItem(CFG_KEY,JSON.stringify(c));return true}catch(e){return false}}
+function clearCfg(){try{localStorage.removeItem(CFG_KEY)}catch(e){}}
+function hasToken(){var c=cfg();return !!(c.token&&c.owner&&c.repo)}
+function guessRepo(){
+  var h=location.hostname,p=location.pathname.split('/').filter(Boolean);
+  if(/\.github\.io$/i.test(h)){
+    var o=h.replace(/\.github\.io$/i,'');
+    return {owner:o,repo:(p[0]&&p[0].indexOf('.')<0)?p[0]:o+'.github.io'};
+  }
+  return {owner:'',repo:''};
+}
+
+/* ---------- Data ---------- */
+var DATA={site:{},apps:[]},APPS=[],loaded=false,loadError='';
+var root,q;
+var state={cat:'Semua',q:''},timer=null,slide=0,lastView='';
+var saving=false,draft=null,editing=false,curApp=null;
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+$('#app').innerHTML='<div class="wrap">'+HEADER+'<main id="root"></main>'+FOOTER+'</div>'+
+  '<div class="toast" id="toast" hidden role="status"></div>'+
+  '<div class="lightbox" id="lb" hidden><button class="lb-x" type="button" aria-label="Tutup pratinjau">&times;</button><img id="lbimg" alt="Pratinjau aplikasi"></div>';
+root=$('#root');q=$('#q');
+
+/* ---------- Ikon dan kartu ---------- */
+function letterIcon(name){
+  var h=0;for(var i=0;i<name.length;i++)h=(h*31+name.charCodeAt(i))%360;
+  var ch=esc((name.trim()[0]||'A').toUpperCase());
+  return '<svg viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="hsl('+h+' 70% 46%)"/><text x="32" y="43" text-anchor="middle" font-family="Plus Jakarta Sans,system-ui,sans-serif" font-weight="800" font-size="32" fill="#fff">'+ch+'</text></svg>';
+}
+function ico(a){
+  var inner=a.iconImg?'<img src="'+esc(a.iconImg)+'" alt="">':(ICON[a.icon]||letterIcon(a.name||'A'));
+  return '<span class="ico">'+inner+'</span>';
+}
+function byId(id){return APPS.filter(function(x){return x.id===id})[0]}
+function cats(){var s=['Semua'];APPS.forEach(function(a){if(a.cat&&s.indexOf(a.cat)<0)s.push(a.cat)});return s}
+function card(a){
+  return '<a class="card" href="#app-'+esc(a.id)+'">'+ico(a)+'<b>'+esc(a.name)+'</b>'+
+   '<span class="meta"><span>'+I.db.replace('<svg','<svg style="color:var(--muted)"')+esc(a.size||'-')+'</span><i></i><span>'+esc(a.ver||'-')+'</span></span>'+
+   '<span class="dl">'+I.dl+'Download</span></a>';
+}
+function filtered(){
+  var t=state.q.trim().toLowerCase();
+  return APPS.filter(function(a){
+    return (state.cat==='Semua'||a.cat===state.cat)&&(!t||((a.name||'')+' '+(a.tag||'')+' '+(a.desc||'')).toLowerCase().indexOf(t)>-1);
+  });
+}
+function gridHTML(){
+  var l=filtered();
+  if(l.length)return l.map(card).join('');
+  return APPS.length?'<div class="empty">Aplikasi tidak ditemukan. Coba kata kunci atau kategori lain.</div>'
+    :'<div class="empty">Belum ada aplikasi.'+(hasToken()?' <a href="#admin-baru" style="color:var(--link);font-weight:600">Tambah aplikasi pertama</a>':'')+'</div>';
+}
+function listHead(){return state.cat==='Semua'?'Daftar Aplikasi':'Daftar Aplikasi: '+state.cat}
+
+/* ---------- Halaman ---------- */
+function box(inner){return '<section class="prose">'+inner+'</section>'}
+function homeHTML(){
+  return '<section class="hero" aria-label="Banner"><div class="hero-copy"><h1 id="sh" class="fade"></h1><p id="sp" class="fade"></p>'+
+   '<button class="cta" id="cta">'+I.dl+'Mulai Download '+I.chev+'</button></div>'+heroArt+
+   '<div class="dots" id="dots" role="group" aria-label="Pilih slide banner"></div></section>'+
+   '<section id="daftar"><div class="sec-head"><h2 id="lh">'+esc(listHead())+'</h2><span style="display:flex;gap:8px;flex-wrap:wrap">'+
+   (hasToken()?'<a class="pill" href="#admin-baru">'+I.plus+'Tambah</a>':'')+
+   '<button class="pill" id="all">Lihat Semua '+I.arrow+'</button></span></div>'+
+   '<div class="apps" id="grid">'+gridHTML()+'</div></section>';
+}
+function detailHTML(a){
+  var others=APPS.filter(function(x){return x.id!==a.id}).slice(0,4);
+  var shots=(a.shots&&a.shots.length)?'<div class="bar">'+I.img+'<h2>Pratinjau Aplikasi</h2></div><div class="shots">'+
+    a.shots.map(function(s,i){return '<button type="button" class="shot" data-i="'+i+'" aria-label="Perbesar pratinjau '+(i+1)+'"><img src="'+esc(s)+'" alt="Pratinjau '+esc(a.name)+' '+(i+1)+'"></button>'}).join('')+'</div>':'';
+  var feats=(a.feats&&a.feats.length)?'<h3>Fitur Utama:</h3><ul class="feats">'+a.feats.map(function(f){return '<li>'+I.check+'<span>'+esc(f)+'</span></li>'}).join('')+'</ul>':'';
+  var note=a.note?'<div class="note">'+I.info+'<div><b>Catatan:</b><span>'+esc(a.note)+'</span></div></div>':'';
+  var btn=safeUrl(a.url)?'<a class="big" id="bigdl" href="'+esc(dlUrl(a.url))+'" target="_blank" rel="noopener noreferrer">'+I.dl+'Download Sekarang</a>'
+    :'<button class="big" id="bigdl" type="button">'+I.dl+'Download Sekarang</button>';
+  return '<nav class="crumb" aria-label="Jejak halaman"><a href="#beranda">'+I.home+'Beranda</a>'+I.chev.replace('<svg','<svg style="width:14px;height:14px"')+'<span>'+esc(a.name)+'</span>'+
+   (hasToken()?'<a class="pill" style="margin-left:auto" href="#admin-edit-'+esc(a.id)+'">Edit aplikasi</a>':'')+'</nav>'+
+   '<article class="detail"><div class="d-top">'+ico(a)+'<div><h1>'+esc(a.name)+'</h1><p class="d-tag">'+esc(a.tag||'')+'</p>'+
+   '<div class="facts"><div class="fact">'+I.db+'<div><small>Ukuran</small><b>'+esc(a.size||'-')+'</b></div></div>'+
+   '<div class="fact">'+I.tag+'<div><small>Versi</small><b>'+esc(a.ver||'-')+'</b></div></div>'+
+   '<div class="fact">'+I.file+'<div><small>Format</small><b>'+esc(a.fmt||'.exe')+'</b></div></div></div></div></div>'+
+   '<div class="d-dl">'+btn+'<p class="hint">Klik tombol di atas untuk mengunduh aplikasi.</p></div>'+
+   shots+
+   '<div class="bar">'+I.doc+'<h2>Deskripsi Aplikasi</h2></div>'+
+   '<div class="d-body"><p>'+esc(a.desc||'')+'</p>'+feats+note+'</div></article>'+
+   (others.length?'<div class="sec-head"><h2>Aplikasi Lainnya</h2></div><div class="apps">'+others.map(card).join('')+'</div>':'');
+}
+function proseHTML(k){
+  var em=(DATA.site&&DATA.site.email)||'';
+  var P={
+   tentang:'<h1>Tentang Genesis Tech Store</h1><p>Genesis Tech Store adalah pusat download aplikasi untuk sekolah dan pengguna umum. Setiap aplikasi punya halaman sendiri berisi ukuran file, versi, format, dan penjelasan fitur, sehingga Anda tahu apa yang diunduh sebelum menekan tombol.</p><h2>Yang tersedia</h2><p>Aplikasi pendidikan, alat bantu, dan game untuk Windows. Berkas berformat <span class="mono">.exe</span>.</p>',
+   bantuan:'<h1>Bantuan</h1><h2>Cara mengunduh</h2><p>Pilih aplikasi di beranda, buka halaman detailnya, lalu tekan Download Sekarang.</p><h2>Aplikasi tidak bisa dibuka</h2><p>Periksa spesifikasi minimum pada bagian Catatan di halaman aplikasi, lalu jalankan berkas sebagai administrator.</p><h2>Kontak</h2><p>'+(em?'Kirim pertanyaan ke <span class="mono">'+esc(em)+'</span>':'Hubungi kami lewat media sosial di bagian bawah halaman.')+'</p>',
+   privasi:'<h1>Kebijakan Privasi</h1><p>Genesis Tech Store tidak meminta akun untuk mengunduh aplikasi. Data pencarian hanya diproses di peramban Anda dan tidak dikirim ke server.</p><h2>Berkas unduhan</h2><p>Periksa ukuran dan versi berkas sebelum menjalankannya. Unduh hanya dari halaman resmi aplikasi di Genesis Tech Store.</p>'
+  };
+  return box(P[k]);
+}
+function renderSocial(){
+  var el=$('#social');if(!el)return;
+  var s=DATA.site||{},out='';
+  [['youtube','YouTube'],['facebook','Facebook'],['telegram','Telegram']].forEach(function(p){
+    if(safeUrl(s[p[0]]))out+='<a href="'+esc(s[p[0]])+'" target="_blank" rel="noopener noreferrer" aria-label="'+p[1]+'">'+SOC[p[1]]+'</a>';
+  });
+  el.innerHTML=out?'<span>Ikuti Kami:</span>'+out:'';
+}
+
+/* ---------- GitHub API ---------- */
+function gh(path,opt){
+  var c=cfg();opt=opt||{};
+  var h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+c.token,'X-GitHub-Api-Version':'2022-11-28'};
+  if(opt.body)h['Content-Type']='application/json';
+  return fetch('https://api.github.com'+path,{method:opt.method||'GET',headers:h,body:opt.body?JSON.stringify(opt.body):undefined}).then(function(r){
+    if(r.ok)return r.status===204?null:r.json();
+    return r.json().catch(function(){return {}}).then(function(j){var e=new Error(j.message||('HTTP '+r.status));e.status=r.status;throw e});
+  });
+}
+function repoBase(){var c=cfg();return '/repos/'+encodeURIComponent(c.owner)+'/'+encodeURIComponent(c.repo)}
+function repoData(){
+  var c=cfg();
+  return fetch('https://api.github.com'+repoBase()+'/contents/apps.json?ref='+encodeURIComponent(c.branch||'main'),
+    {headers:{'Accept':'application/vnd.github.raw+json','Authorization':'Bearer '+c.token,'X-GitHub-Api-Version':'2022-11-28'}}).then(function(r){
+    if(!r.ok){var e=new Error('HTTP '+r.status);e.status=r.status;throw e}
+    return r.text();
+  }).then(function(t){var d=JSON.parse(t);if(!d.apps)d.apps=[];if(!d.site)d.site={};return d});
+}
+function imgPaths(d){
+  var s=[];
+  (d.apps||[]).forEach(function(a){
+    if(/^img\//.test(a.iconImg||''))s.push(a.iconImg);
+    (a.shots||[]).forEach(function(x){if(/^img\//.test(x))s.push(x)});
+  });
+  return s;
+}
+/* Satu commit berisi data baru, gambar baru, dan penghapusan gambar lama. */
+async function commit(op,message){
+  var c=cfg(),branch=c.branch||'main',base=repoBase();
+  var latest=await repoData();
+  var disp=op(clone(latest));
+  var next=clone(disp),files=[];
+  next.apps.forEach(function(a){
+    if(/^data:image\//.test(a.iconImg||'')){var p='img/'+a.id+'-ikon-'+rand()+'.png';files.push({path:p,b64:a.iconImg.split(',')[1]});a.iconImg=p}
+    a.shots=(a.shots||[]).map(function(s){
+      if(/^data:image\//.test(s)){var p='img/'+a.id+'-'+rand()+'.jpg';files.push({path:p,b64:s.split(',')[1]});return p}
+      return s;
+    });
+  });
+  var keep=imgPaths(next),del=imgPaths(latest).filter(function(p){return keep.indexOf(p)<0});
+  var ref=await gh(base+'/git/ref/heads/'+encodeURI(branch));
+  var head=ref.object.sha;
+  var hc=await gh(base+'/git/commits/'+head);
+  var entries=[];
+  for(var i=0;i<files.length;i++){
+    var b=await gh(base+'/git/blobs',{method:'POST',body:{content:files[i].b64,encoding:'base64'}});
+    entries.push({path:files[i].path,mode:'100644',type:'blob',sha:b.sha});
+  }
+  var jb=await gh(base+'/git/blobs',{method:'POST',body:{content:JSON.stringify(next,null,2)+'\n',encoding:'utf-8'}});
+  entries.push({path:'apps.json',mode:'100644',type:'blob',sha:jb.sha});
+  var tree;
+  try{
+    tree=await gh(base+'/git/trees',{method:'POST',body:{base_tree:hc.tree.sha,tree:entries.concat(del.map(function(p){return {path:p,mode:'100644',type:'blob',sha:null}}))}});
+  }catch(e){
+    if(!del.length)throw e;
+    tree=await gh(base+'/git/trees',{method:'POST',body:{base_tree:hc.tree.sha,tree:entries}});
+  }
+  var nc=await gh(base+'/git/commits',{method:'POST',body:{message:message,tree:tree.sha,parents:[head]}});
+  await gh(base+'/git/refs/heads/'+encodeURI(branch),{method:'PATCH',body:{sha:nc.sha}});
+  return disp;
+}
+function errMsg(e){
+  var s=e&&e.status;
+  if(s===401)return 'Token ditolak atau sudah kedaluwarsa. Buat token baru di GitHub lalu hubungkan ulang.';
+  if(s===403)return 'Token tidak punya izin menulis ke repo ini. Pastikan izin Contents diatur ke Read and write.';
+  if(s===404)return 'Repo, branch, atau file apps.json tidak ditemukan. Periksa Pengaturan GitHub.';
+  if(s===409||s===422)return 'Terjadi bentrok saat menyimpan. Muat ulang halaman lalu coba lagi.';
+  return 'Gagal menyimpan. Periksa koneksi internet lalu coba lagi.';
+}
+function setBusy(on){
+  document.querySelectorAll('button[data-save]').forEach(function(b){
+    if(!b.dataset.label)b.dataset.label=b.textContent;
+    b.disabled=on;b.textContent=on?'Menyimpan...':b.dataset.label;
+  });
+}
+function persist(op,msg,message){
+  if(saving)return;
+  saving=true;setBusy(true);
+  commit(op,message||'Perbarui data Genesis Tech Store').then(function(disp){
+    saving=false;DATA=disp;APPS=disp.apps;buildMenu();renderSocial();setBusy(false);
+    toast(msg+' Web akan diperbarui dalam sekitar 1 sampai 2 menit.',7000);
+    if(location.hash!=='#admin')location.hash='admin';else route();
+  }).catch(function(e){saving=false;setBusy(false);toast(errMsg(e),6500)});
+}
+
+/* ---------- Portal admin ---------- */
+function fmtSize(chars){var kb=Math.round(chars/1024);return kb<1024?kb+' KB':(kb/1024).toFixed(1)+' MB'}
+function fld(id,label,val,extra,hint){
+  return '<label class="f" for="'+id+'"><span>'+label+'</span><input id="'+id+'" value="'+esc(val)+'" '+(extra||'')+'>'+(hint?'<small>'+hint+'</small>':'')+'</label>';
+}
+function area(id,label,val,rows,hint){
+  return '<label class="f full" for="'+id+'"><span>'+label+'</span><textarea id="'+id+'" rows="'+rows+'">'+esc(val)+'</textarea>'+(hint?'<small>'+hint+'</small>':'')+'</label>';
+}
+function adminListHTML(){
+  var c=cfg(),s=DATA.site||{};
+  var rows=APPS.map(function(a){
+    return '<div class="adm-row">'+ico(a)+'<div class="adm-info"><b>'+esc(a.name)+'</b><span>'+esc(a.cat||'-')+' · '+esc(a.size||'-')+' · '+esc(a.ver||'-')+' · '+(safeUrl(a.url)?'link download ada':'link download belum diisi')+'</span></div>'+
+      '<div class="adm-act"><a class="btn ghost" href="#app-'+esc(a.id)+'">Lihat</a><a class="btn" href="#admin-edit-'+esc(a.id)+'">Edit</a><button type="button" class="btn danger" data-del="'+esc(a.id)+'">Hapus</button></div></div>';
+  }).join('');
+  return '<div class="adm-top"><h1>Portal Admin</h1><span style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="#admin-github">Pengaturan GitHub</a><a class="btn" href="#admin-baru">'+I.plus+'Tambah Aplikasi</a></span></div>'+
+    '<p class="adm-note">Terhubung ke <b>'+esc(c.owner)+'/'+esc(c.repo)+'</b> (branch '+esc(c.branch||'main')+'). Perubahan tersimpan di GitHub dan tayang di web sekitar 1 sampai 2 menit setelah Simpan. Aplikasi baru muncul paling atas.</p>'+
+    '<div class="adm-list">'+(rows||'<div class="empty">Belum ada aplikasi. Tekan Tambah Aplikasi.</div>')+'</div>'+
+    '<form class="detail" id="siteform" style="margin-top:22px"><h2 class="adm-h" style="font-size:20px">Pengaturan Situs</h2><p class="adm-note" style="margin:6px 0 0">Kosongkan kolom yang tidak dipakai. Ikon media sosial hanya tampil bila link diisi.</p>'+
+    '<div class="fgrid">'+fld('f-s-email','Email kontak',s.email||'','type="email" autocomplete="off"')+
+    fld('f-s-youtube','Link YouTube',s.youtube||'','type="url" placeholder="https://youtube.com/..." autocomplete="off"')+
+    fld('f-s-facebook','Link Facebook',s.facebook||'','type="url" placeholder="https://facebook.com/..." autocomplete="off"')+
+    fld('f-s-telegram','Link Telegram',s.telegram||'','type="url" placeholder="https://t.me/..." autocomplete="off"')+
+    '</div><p class="ferr" id="ferr" role="alert"></p><div class="form-act"><button class="btn" type="submit" data-save>Simpan Pengaturan</button></div></form>';
+}
+function connectHTML(){
+  var c=cfg(),g=guessRepo();
+  return '<nav class="crumb" aria-label="Jejak halaman"><a href="#beranda">'+I.home+'Beranda</a>'+I.chev.replace('<svg','<svg style="width:14px;height:14px"')+'<span>Pengaturan GitHub</span></nav>'+
+   '<form class="detail" id="cform"><h1 class="adm-h">Hubungkan ke GitHub</h1>'+
+   '<p class="adm-note" style="margin-top:8px">Portal admin menyimpan perubahan langsung ke repo GitHub Anda. Token hanya disimpan di browser ini dan dikirim hanya ke api.github.com. Cara membuat token ada di file PANDUAN.md.</p>'+
+   '<div class="fgrid">'+
+   fld('f-owner','Akun GitHub',c.owner||g.owner,'required autocomplete="off" placeholder="namaakun"')+
+   fld('f-repo','Nama repo',c.repo||g.repo,'required autocomplete="off" placeholder="genesis-tech-store"')+
+   fld('f-branch','Branch',c.branch||'main','required autocomplete="off"')+
+   fld('f-token','Token GitHub',c.token||'','type="password" required autocomplete="off" placeholder="github_pat_..."','Izin yang dibutuhkan: Contents, Read and write, hanya untuk repo ini.')+
+   '</div><p class="ferr" id="ferr" role="alert"></p>'+
+   '<div class="form-act"><button class="btn" type="submit" data-save>Hubungkan</button>'+(c.token?'<button class="btn danger" type="button" id="disc">Putuskan dan hapus token</button>':'')+'<a class="btn ghost" href="#beranda">Batal</a></div></form>';
+}
+function blank(){return {id:'',name:'',cat:'Pendidikan',size:'',ver:'v1.0.0',fmt:'.exe',tag:'',desc:'',feats:[],note:'',url:'',icon:'',iconImg:'',shots:[]}}
+function formHTML(){
+  var d=draft;
+  return '<nav class="crumb" aria-label="Jejak halaman"><a href="#admin">'+I.home+'Portal Admin</a>'+I.chev.replace('<svg','<svg style="width:14px;height:14px"')+'<span>'+(editing?'Edit aplikasi':'Tambah aplikasi')+'</span></nav>'+
+   '<form class="detail" id="appform" novalidate><h1 class="adm-h">'+(editing?'Edit Aplikasi':'Tambah Aplikasi')+'</h1>'+
+   '<div class="fgrid">'+
+   fld('f-name','Nama aplikasi',d.name,'required autocomplete="off"')+
+   '<label class="f" for="f-cat"><span>Kategori</span><input id="f-cat" list="catlist" value="'+esc(d.cat)+'" autocomplete="off"><datalist id="catlist">'+cats().filter(function(c){return c!=='Semua'}).map(function(c){return '<option value="'+esc(c)+'">'}).join('')+'</datalist><small>Pilih yang ada atau ketik kategori baru.</small></label>'+
+   fld('f-size','Ukuran file',d.size,'placeholder="45 MB" autocomplete="off"')+
+   fld('f-ver','Versi',d.ver,'placeholder="v1.0.0" autocomplete="off"')+
+   fld('f-fmt','Format file',d.fmt,'placeholder=".exe" autocomplete="off"')+
+   fld('f-tag','Judul singkat',d.tag,'placeholder="Aplikasi Pelaporan ..." autocomplete="off"')+
+   '<div class="f full">'+fld('f-url','Link download',d.url,'type="url" inputmode="url" placeholder="https://drive.google.com/file/d/..." autocomplete="off"','Tempel link Google Drive (atur ke &quot;Siapa saja yang memiliki link&quot;), GitHub Releases, atau lainnya. Link Drive otomatis diubah menjadi link unduh langsung.')+'</div>'+
+   area('f-desc','Deskripsi',d.desc,5)+
+   area('f-feats','Fitur utama',(d.feats||[]).join('\n'),5,'Satu fitur per baris.')+
+   fld('f-note','Catatan (opsional)',d.note,'autocomplete="off"')+
+   '<div class="f full"><span>Ikon aplikasi</span><div class="media" id="m-icon"></div><small>Gambar persegi lebih bagus. Otomatis dikecilkan. Kosongkan untuk memakai huruf pertama nama aplikasi.</small></div>'+
+   '<div class="f full"><span>Preview aplikasi (tangkapan layar)</span><div class="thumbs" id="m-shots"></div><small>Maksimal 6 gambar. Otomatis dikecilkan agar web tetap ringan.</small></div>'+
+   '</div><p class="ferr" id="ferr" role="alert"></p>'+
+   '<div class="form-act"><button class="btn" type="submit" data-save>Simpan dan Terbitkan</button><a class="btn ghost" href="#admin">Batal</a></div></form>';
+}
+function ferr(msg){var e=$('#ferr');if(e)e.textContent=msg||''}
+function renderMedia(){
+  $('#m-icon').innerHTML=ico(draft)+'<label class="btn ghost" for="f-icon">Pilih ikon<input class="sr" id="f-icon" type="file" accept="image/*"></label>'+(draft.iconImg?'<button type="button" class="btn ghost" data-rm-icon>Hapus ikon</button>':'');
+  var t=draft.shots.map(function(s,i){return '<div class="thumb"><img src="'+esc(s)+'" alt="Preview '+(i+1)+'"><button type="button" data-rm="'+i+'" aria-label="Hapus preview '+(i+1)+'">&times;</button></div>'}).join('');
+  if(draft.shots.length<6)t+='<label class="thumb add" for="f-shots"><span>'+I.plus+'Tambah gambar</span><input class="sr" id="f-shots" type="file" accept="image/*" multiple></label>';
+  $('#m-shots').innerHTML=t;
+  var fi=$('#f-icon');if(fi)fi.addEventListener('change',onIcon);
+  var fs=$('#f-shots');if(fs)fs.addEventListener('change',onShots);
+}
+function readImg(file,max,mime,qual){
+  return new Promise(function(res,rej){
+    if(!/^image\//.test(file.type)){rej(new Error('bukan gambar'));return}
+    var fr=new FileReader();
+    fr.onerror=function(){rej(new Error('gagal baca'))};
+    fr.onload=function(){
+      var im=new Image();
+      im.onerror=function(){rej(new Error('gagal muat'))};
+      im.onload=function(){
+        var w=im.naturalWidth||im.width,h=im.naturalHeight||im.height;
+        if(!w||!h){rej(new Error('ukuran 0'));return}
+        var k=Math.min(1,max/Math.max(w,h)),cw=Math.max(1,Math.round(w*k)),ch=Math.max(1,Math.round(h*k));
+        var c=document.createElement('canvas');c.width=cw;c.height=ch;var x=c.getContext('2d');
+        if(mime==='image/jpeg'){x.fillStyle='#fff';x.fillRect(0,0,cw,ch)}
+        x.drawImage(im,0,0,cw,ch);
+        res(c.toDataURL(mime,qual));
+      };
+      im.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+function onIcon(e){
+  var f=e.target.files[0];e.target.value='';if(!f)return;
+  readImg(f,192,'image/png').then(function(u){draft.iconImg=u;ferr('');renderMedia()},function(){ferr('Ikon tidak bisa dibaca. Pakai gambar PNG, JPG atau WebP.')});
+}
+function onShots(e){
+  var fl=Array.prototype.slice.call(e.target.files).slice(0,6-draft.shots.length);e.target.value='';if(!fl.length)return;
+  Promise.all(fl.map(function(f){return readImg(f,1100,'image/jpeg',0.82).catch(function(){return null})})).then(function(r){
+    var ok=r.filter(Boolean);draft.shots=draft.shots.concat(ok);
+    ferr(ok.length<fl.length?'Sebagian gambar tidak bisa dibaca dan dilewati.':'');renderMedia();
+  });
+}
+function readForm(){
+  var g=function(i){return $('#'+i).value.trim()};
+  return {name:g('f-name'),cat:g('f-cat')||'Lainnya',size:g('f-size'),ver:g('f-ver'),fmt:g('f-fmt')||'.exe',tag:g('f-tag'),url:g('f-url'),desc:g('f-desc'),
+    feats:g('f-feats').split(/\n+/).map(function(s){return s.trim()}).filter(Boolean),note:g('f-note')};
+}
+function uniqueId(list,name){
+  var base=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'app',id=base,n=2;
+  var has=function(x){return list.some(function(a){return a.id===x})};
+  while(has(id))id=base+'-'+(n++);
+  return id;
+}
+function bindForm(){
+  renderMedia();
+  $('#m-icon').addEventListener('click',function(e){if(e.target.closest('[data-rm-icon]')){draft.iconImg='';renderMedia()}});
+  $('#m-shots').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){draft.shots.splice(+b.dataset.rm,1);renderMedia()}});
+  $('#appform').addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=readForm();
+    if(!v.name){ferr('Nama aplikasi wajib diisi.');$('#f-name').focus();return}
+    if(v.url&&!safeUrl(v.url)){ferr('Link download harus diawali http:// atau https://');$('#f-url').focus();return}
+    var app=Object.assign({},draft,v),wasEditing=editing;
+    persist(function(d){
+      if(wasEditing){
+        var found=false;
+        d.apps=d.apps.map(function(x){if(x.id===app.id){found=true;return app}return x});
+        if(!found)d.apps.unshift(app);
+      }else{
+        app.id=uniqueId(d.apps,v.name);d.apps.unshift(app);
+      }
+      return d;
+    },'Tersimpan.',(wasEditing?'Ubah aplikasi: ':'Tambah aplikasi: ')+v.name);
+  });
+}
+function bindSite(){
+  $('#siteform').addEventListener('submit',function(e){
+    e.preventDefault();
+    var g=function(i){return $('#'+i).value.trim()},v={email:g('f-s-email'),youtube:g('f-s-youtube'),facebook:g('f-s-facebook'),telegram:g('f-s-telegram')};
+    var bad=['youtube','facebook','telegram'].filter(function(k){return v[k]&&!safeUrl(v[k])});
+    if(bad.length){ferr('Link harus diawali http:// atau https://');return}
+    persist(function(d){d.site=Object.assign({},d.site,v);return d},'Pengaturan tersimpan.','Ubah pengaturan situs');
+  });
+}
+function bindConnect(){
+  var f=$('#cform');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var g=function(i){return $('#'+i).value.trim()};
+    var next={owner:g('f-owner'),repo:g('f-repo'),branch:g('f-branch')||'main',token:g('f-token')},old=cfg();
+    if(!next.owner||!next.repo||!next.token){ferr('Akun, nama repo, dan token wajib diisi.');return}
+    saveCfg(next);setBusy(true);ferr('Memeriksa koneksi...');
+    var fail=function(m){old.token?saveCfg(old):clearCfg();setBusy(false);ferr(m)};
+    gh(repoBase()).then(function(r){
+      if(!(r.permissions&&r.permissions.push)){fail('Token terbaca, tapi tidak punya izin menulis. Atur izin Contents ke Read and write.');return}
+      return repoData().then(function(){
+        setBusy(false);toast('Terhubung ke '+next.owner+'/'+next.repo+'.');location.hash='admin';route();
+      },function(e){fail(e.status===404?'File apps.json tidak ditemukan di repo. Unggah dulu isi folder dari paket.':errMsg(e))});
+    },function(e){fail(e.status===401?'Token ditolak. Periksa token yang ditempel.':e.status===404?'Repo tidak ditemukan atau token tidak punya akses ke repo ini.':errMsg(e))});
+  });
+  var d=$('#disc');
+  if(d)d.addEventListener('click',function(){clearCfg();toast('Token dihapus dari browser ini.');location.hash='beranda';route()});
+}
+
+/* ---------- Umum ---------- */
+function setSlide(i){
+  slide=(i+SLIDES.length)%SLIDES.length;
+  var h=$('#sh'),p=$('#sp');if(!h)return;
+  h.innerHTML=SLIDES[slide].h;p.textContent=SLIDES[slide].p;
+  [h,p].forEach(function(e){e.classList.remove('fade');void e.offsetWidth;e.classList.add('fade')});
+  var d=$('#dots');d.innerHTML=SLIDES.map(function(_,n){return '<button aria-label="Slide '+(n+1)+'"'+(n===slide?' aria-current="true"':'')+' data-i="'+n+'"></button>'}).join('');
+}
+function toast(msg,ms){var t=$('#toast');t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){t.hidden=true},ms||4200)}
+function goList(){var e=$('#daftar');if(e)e.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+function refreshGrid(){var g=$('#grid');if(g){g.innerHTML=gridHTML();$('#lh').textContent=listHead()}}
+function buildMenu(){
+  if(cats().indexOf(state.cat)<0)state.cat='Semua';
+  $('#catmenu').innerHTML=cats().map(function(c){return '<button data-c="'+esc(c)+'"'+(c===state.cat?' aria-current="true"':'')+'>'+esc(c)+'</button>'}).join('');
+  $('#catbtn').classList.toggle('on',state.cat!=='Semua');
+}
+function goHome(then){
+  var h=location.hash.slice(1);
+  if(h===''||h==='beranda'){route();if(then)then()}
+  else{location.hash='beranda';if(then)setTimeout(then,60)}
+}
+function route(){
+  var h=location.hash.slice(1),m,app=null,view,html='',after=null;
+  clearInterval(timer);curApp=null;
+  if(!loaded){
+    view='loading';
+    html=loadError?box('<h1>Data belum bisa dimuat</h1><p>'+esc(loadError)+'</p>'):box('<p>Memuat...</p>');
+  }else if(h==='admin'||h==='admin-github'||h==='admin-baru'||h.indexOf('admin-edit-')===0){
+    view=h;
+    if(h==='admin-github'||!hasToken()){html=connectHTML();view='admin-github';after=bindConnect}
+    else if(h==='admin'){html=adminListHTML();after=bindSite}
+    else{
+      var ed=h==='admin-baru'?null:byId(h.slice(11));
+      if(h!=='admin-baru'&&!ed){html=adminListHTML();view='admin';after=bindSite}
+      else{draft=ed?clone(ed):blank();editing=!!ed;html=formHTML();after=bindForm}
+    }
+  }else if((m=h.match(/^app-([a-z0-9-]+)$/))){
+    app=byId(m[1]);
+    if(app){view='app-'+app.id;html=detailHTML(app);curApp=app}
+    else{view='home';html=homeHTML()}
+  }else if(h==='tentang'||h==='bantuan'||h==='privasi'){view=h;html=proseHTML(h)}
+  else{view='home';html=homeHTML()}
+  root.innerHTML=html;
+  $('#n-home').classList.toggle('on',view==='home');
+  $('#n-about').classList.toggle('on',view==='tentang');
+  $('#n-help').classList.toggle('on',view==='bantuan');
+  document.title=app?app.name+' | Genesis Tech Store':'Genesis Tech Store';
+  if(view!==lastView)window.scrollTo(0,0);
+  lastView=view;
+  if(view==='home'){setSlide(0);if(!reduce)timer=setInterval(function(){setSlide(slide+1)},5500)}
+  if(app){
+    var b=$('#bigdl');
+    if(b&&b.tagName==='BUTTON')b.addEventListener('click',function(){toast('Link download '+app.name+' belum tersedia.')});
+  }
+  if(after)after();
+}
+
+document.addEventListener('click',function(e){
+  var t=e.target;if(!t.closest)return;
+  var dot=t.closest('#dots button');if(dot){clearInterval(timer);setSlide(+dot.dataset.i);return}
+  if(t.closest('#cta')){goList();return}
+  if(t.closest('#all')){state.cat='Semua';state.q='';q.value='';buildMenu();refreshGrid();return}
+  var shot=t.closest('.shot');if(shot&&curApp){$('#lbimg').src=curApp.shots[+shot.dataset.i];$('#lb').hidden=false;return}
+  if(t.closest('#lb')){$('#lb').hidden=true;return}
+  var del=t.closest('[data-del]');
+  if(del){
+    if(del.dataset.armed){var id=del.dataset.del;persist(function(d){d.apps=d.apps.filter(function(x){return x.id!==id});return d},'Aplikasi dihapus.','Hapus aplikasi: '+id)}
+    else{del.dataset.armed='1';del.textContent='Ya, hapus';setTimeout(function(){if(del.isConnected){delete del.dataset.armed;del.textContent='Hapus'}},4000)}
+    return;
+  }
+  var cb=t.closest('#catbtn'),menu=$('#catmenu');
+  if(cb){var open=menu.hidden;menu.hidden=!open;cb.setAttribute('aria-expanded',String(open));return}
+  var item=t.closest('#catmenu button');
+  if(item){state.cat=item.dataset.c;buildMenu();menu.hidden=true;$('#catbtn').setAttribute('aria-expanded','false');goHome(function(){refreshGrid();goList()});return}
+  if(!menu.hidden){menu.hidden=true;$('#catbtn').setAttribute('aria-expanded','false')}
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){var m=$('#catmenu');m.hidden=true;$('#catbtn').setAttribute('aria-expanded','false');$('#lb').hidden=true}
+});
+q.addEventListener('input',function(){state.q=q.value;goHome(function(){refreshGrid()})});
+$('#searchform').addEventListener('submit',function(e){e.preventDefault();state.q=q.value;goHome(function(){refreshGrid();goList()})});
+window.addEventListener('hashchange',route);
+
+route();
+fetch('apps.json?v='+Date.now(),{cache:'no-store'}).then(function(r){
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r.json();
+}).then(function(d){
+  DATA=d||{};if(!DATA.site)DATA.site={};if(!DATA.apps)DATA.apps=[];APPS=DATA.apps;
+  loaded=true;buildMenu();renderSocial();route();
+}).catch(function(){
+  loadError=location.protocol==='file:'?'File apps.json tidak bisa dibaca saat halaman dibuka langsung dari komputer. Pasang di GitHub Pages atau Netlify, atau jalankan server lokal.':'File apps.json tidak ditemukan atau rusak. Pastikan file itu ada di folder yang sama dengan index.html.';
+  route();
+});
+})();
+
+</script>
+</body>
+</html>
