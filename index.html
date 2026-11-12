@@ -513,14 +513,14 @@ function syncFromRepo(){
     if(h==='admin')route();
   }).catch(function(){});
 }
-function persist(op,msg,message){
+function persist(op,msg,message,onFail){
   if(saving)return;
   saving=true;setBusy(true);
   commit(op,message||'Perbarui data Genesis Tech Store').then(function(disp){
     saving=false;DATA=disp;APPS=disp.apps;buildMenu();renderSocial();setBusy(false);
     toast(msg+' Web akan diperbarui dalam sekitar 1 sampai 2 menit.',7000);
     if(location.hash!=='#admin')location.hash='admin';else route();
-  }).catch(function(e){saving=false;setBusy(false);toast(errMsg(e),6500)});
+  }).catch(function(e){saving=false;setBusy(false);toast(errMsg(e),6500);if(onFail)onFail()});
 }
 
 /* ---------- Portal admin ---------- */
@@ -567,7 +567,7 @@ function formHTML(){
    '<form class="detail" id="appform" novalidate><h1 class="adm-h">'+(editing?'Edit Aplikasi':'Tambah Aplikasi')+'</h1>'+
    '<div class="fgrid">'+
    fld('f-name','Nama aplikasi',d.name,'required autocomplete="off"')+
-   '<div class="f full"><span>Isi otomatis dari file aplikasi (opsional)</span><div class="media"><label class="btn ghost" for="f-appfile">Pilih file aplikasi<input class="sr" id="f-appfile" type="file"></label><span id="autonote" style="align-self:center"></span></div><small>File tidak diunggah ke mana pun. Hanya nama, ukuran, dan jenis file dibaca untuk mengisi Ukuran, Versi, dan Format. Versi terisi jika nama file memuat angka versi, misalnya BungaMekar-1.2.0.exe.</small></div>'+
+   '<div class="f full"><span>Ikon dari file aplikasi (opsional)</span><div class="media"><label class="btn ghost" for="f-appfile">Ambil ikon dari file .exe<input class="sr" id="f-appfile" type="file"></label><span id="autonote" style="align-self:center"></span></div><small>File tidak diunggah ke mana pun, hanya ikonnya yang dibaca. Ikon yang sudah ada akan diganti. Ukuran, versi, dan format diisi dari Link download (GitHub Releases).</small></div>'+
    '<label class="f" for="f-cat"><span>Kategori</span><input id="f-cat" list="catlist" value="'+esc(d.cat)+'" autocomplete="off"><datalist id="catlist">'+cats().filter(function(c){return c!=='Semua'}).map(function(c){return '<option value="'+esc(c)+'">'}).join('')+'</datalist><small>Pilih yang ada atau ketik kategori baru.</small></label>'+
    fld('f-size','Ukuran file',d.size,'placeholder="45 MB" autocomplete="off"')+
    fld('f-ver','Versi',d.ver,'placeholder="v1.0.0" autocomplete="off"')+
@@ -644,14 +644,74 @@ function extOf(name){var m=String(name||'').toLowerCase().match(/\.(exe|msi|apk|
 function verOf(text){var m=String(text||'').match(/(?:^|[^0-9a-z])v?(\d+(?:\.\d+){1,3})(?![0-9])/i);return m?'v'+m[1]:''}
 function setAuto(id,val){var e=$('#'+id);if(e&&val){e.value=val;return true}return false}
 function autoNote(t){var e=$('#autonote');if(e)e.textContent=t||''}
+/* Ambil ikon utama dari file .exe (Windows PE). Hanya bagian header dan resource yang dibaca. */
+async function exeIcon(file){
+  var head=await file.slice(0,Math.min(file.size,65536)).arrayBuffer();
+  var v=new DataView(head);
+  if(v.byteLength<64||v.getUint16(0,true)!==0x5A4D)return null;
+  var pe=v.getUint32(60,true);
+  if(pe+24>v.byteLength||v.getUint32(pe,true)!==0x00004550)return null;
+  var nsec=v.getUint16(pe+6,true),osz=v.getUint16(pe+20,true),opt=pe+24,magic=v.getUint16(opt,true);
+  var dd=opt+(magic===0x20b?112:96);
+  if(dd+24>v.byteLength)return null;
+  var rrva=v.getUint32(dd+16,true),rsize=v.getUint32(dd+20,true);
+  if(!rrva||!rsize)return null;
+  var st=opt+osz,sec=null;
+  for(var i=0;i<nsec;i++){
+    var o=st+i*40;if(o+40>v.byteLength)break;
+    var vs=v.getUint32(o+8,true),va=v.getUint32(o+12,true),rs=v.getUint32(o+16,true),rp=v.getUint32(o+20,true);
+    if(rrva>=va&&rrva<va+Math.max(vs,rs)){sec={va:va,rs:rs,rp:rp};break}
+  }
+  if(!sec||sec.rs>268435456)return null;
+  var rbuf=await file.slice(sec.rp,sec.rp+sec.rs).arrayBuffer();
+  var r=new DataView(rbuf),base=rrva-sec.va;   /* posisi awal resource di dalam buffer */
+  function dir(off){
+    if(off<0||off+16>r.byteLength)return [];
+    var n=r.getUint16(off+12,true)+r.getUint16(off+14,true),a=[];
+    for(var k=0;k<n&&off+16+k*8+8<=r.byteLength;k++){
+      var id=r.getUint32(off+16+k*8,true),to=r.getUint32(off+16+k*8+4,true);
+      a.push({id:id&0x80000000?-1:id,sub:!!(to&0x80000000),off:base+(to&0x7fffffff)});
+    }
+    return a;
+  }
+  function leaf(e){   /* turun sampai data (abaikan bahasa) */
+    var guard=0;while(e&&e.sub&&guard++<4){var d=dir(e.off);e=d[0]}
+    if(!e||e.sub||e.off+8>r.byteLength)return null;
+    var rva=r.getUint32(e.off,true),sz=r.getUint32(e.off+4,true),p=rva-sec.va;
+    if(p<0||p+sz>r.byteLength||sz<1)return null;
+    return new Uint8Array(rbuf,p,sz);
+  }
+  var top=dir(base),grp=null,ico={};
+  top.forEach(function(e){if(e.id===14)grp=e;if(e.id===3)ico=e});
+  if(!grp||!ico.sub)return null;
+  var gdata=leaf(dir(grp.off)[0]);
+  if(!gdata||gdata.length<6)return null;
+  var gv=new DataView(gdata.buffer,gdata.byteOffset,gdata.byteLength),cnt=gv.getUint16(4,true),best=null;
+  for(var j=0;j<cnt&&6+j*14+14<=gdata.length;j++){
+    var q=6+j*14,w=gv.getUint8(q)||256,bits=gv.getUint16(q+6,true),id=gv.getUint16(q+12,true);
+    var score=w*100+bits;
+    if(!best||score>best.score)best={score:score,id:id,w:w,h:gv.getUint8(q+1)||256,bits:bits,colors:gv.getUint8(q+2)};
+  }
+  if(!best)return null;
+  var ent=dir(ico.off).filter(function(e){return e.id===best.id})[0];
+  var img=leaf(ent);
+  if(!img)return null;
+  var out=new Uint8Array(22+img.length),ov=new DataView(out.buffer);
+  ov.setUint16(2,1,true);ov.setUint16(4,1,true);
+  out[6]=best.w>=256?0:best.w;out[7]=best.h>=256?0:best.h;out[8]=best.colors;
+  ov.setUint16(10,1,true);ov.setUint16(12,best.bits||32,true);
+  ov.setUint32(14,img.length,true);ov.setUint32(18,22,true);
+  out.set(img,22);
+  return new Blob([out],{type:'image/x-icon'});
+}
 function onAppFile(e){
   var f=e.target.files[0];e.target.value='';if(!f)return;
-  var got=[];
-  if(setAuto('f-size',fmtBytes(f.size)))got.push('ukuran');
-  var x=extOf(f.name);if(!x){var i=f.name.lastIndexOf('.');x=i>0?f.name.slice(i).toLowerCase():''}
-  if(setAuto('f-fmt',x))got.push('format');
-  if(setAuto('f-ver',verOf(f.name.replace(/\.[^.]+$/,''))))got.push('versi');
-  autoNote(got.length?'Terisi: '+got.join(', ')+(got.indexOf('versi')<0?'. Versi tidak ada di nama file, isi manual.':'.'):'Tidak ada yang bisa dibaca.');
+  if(extOf(f.name)!=='.exe'){autoNote('Ikon hanya bisa diambil dari file .exe. Untuk format lain, pakai tombol Pilih ikon di bawah.');return}
+  autoNote('Membaca ikon...');
+  exeIcon(f).then(function(blob){
+    if(!blob){autoNote('File ini tidak punya ikon yang bisa dibaca. Pakai tombol Pilih ikon di bawah.');return}
+    return readImg(blob,192,'image/png').then(function(u){draft.iconImg=u;renderMedia();autoNote('Ikon berhasil diambil dari file.')});
+  }).catch(function(){autoNote('Ikon tidak bisa dibaca. Pakai tombol Pilih ikon di bawah.')});
 }
 /* Dari link download: format dari akhiran file; untuk link GitHub Releases juga versi (tag) dan ukuran. */
 function onUrlAuto(){
@@ -791,7 +851,13 @@ document.addEventListener('click',function(e){
   if(t.closest('#lb')){$('#lb').hidden=true;return}
   var del=t.closest('[data-del]');
   if(del){
-    if(del.dataset.armed){var id=del.dataset.del;persist(function(d){d.apps=d.apps.filter(function(x){return x.id!==id});return d},'Aplikasi dihapus.','Hapus aplikasi: '+id)}
+    if(del.dataset.armed){
+      if(saving){toast('Masih menyimpan, tunggu sebentar lalu coba lagi.');return}
+      var id=del.dataset.del,row=del.closest('.adm-row');
+      if(row){row.style.opacity='.45';row.style.pointerEvents='none'}
+      del.textContent='Menghapus...';
+      persist(function(d){d.apps=d.apps.filter(function(x){return x.id!==id});return d},'Aplikasi dihapus.','Hapus aplikasi: '+id,function(){route()});
+    }
     else{del.dataset.armed='1';del.textContent='Ya, hapus';setTimeout(function(){if(del.isConnected){delete del.dataset.armed;del.textContent='Hapus'}},4000)}
     return;
   }
