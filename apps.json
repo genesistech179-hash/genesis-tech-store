@@ -1,6 +1,31 @@
 {
   "apps": [
     {
+      "id": "lapor-bosp",
+      "name": "LAPOR BOSP",
+      "cat": "Pendidikan",
+      "size": "70 MB",
+      "ver": "v1.1.1.0",
+      "fmt": ".exe",
+      "tag": "Aplikasi buat laporan BOSP",
+      "desc": "Aplikasi untuk memudahkan membuat pelaporan bos",
+      "feats": [
+        "impor arkas",
+        "Buat rincian penarikan",
+        "Buat laporan SPJ",
+        "memudahkan rekonsiliasi"
+      ],
+      "note": "",
+      "url": "https://github.com/genesistech179-hash/genesis-tech-store/releases/download/v1.1.1.0/LAPOR_BOSP_Setup.exe",
+      "icon": "",
+      "iconImg": "img/lapor-bosp-ikon-zk3r33.png",
+      "shots": [
+        "img/lapor-bosp-cpqha9.jpg",
+        "img/lapor-bosp-04c9pv.jpg",
+        "img/lapor-bosp-nd4apq.jpg"
+      ]
+    },
+    {
       "id": "bunga-mekar",
       "icon": "bunga",
       "name": "Bunga Mekar",
