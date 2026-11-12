@@ -423,7 +423,7 @@ function gh(path,opt){
   var c=cfg();opt=opt||{};
   var h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+c.token,'X-GitHub-Api-Version':'2022-11-28'};
   if(opt.body)h['Content-Type']='application/json';
-  return fetch('https://api.github.com'+path,{method:opt.method||'GET',headers:h,body:opt.body?JSON.stringify(opt.body):undefined}).then(function(r){
+  return fetch('https://api.github.com'+path,{method:opt.method||'GET',headers:h,body:opt.body?JSON.stringify(opt.body):undefined,cache:'no-store'}).then(function(r){
     if(r.ok)return r.status===204?null:r.json();
     return r.json().catch(function(){return {}}).then(function(j){var e=new Error(j.message||('HTTP '+r.status));e.status=r.status;throw e});
   });
@@ -432,7 +432,7 @@ function repoBase(){var c=cfg();return '/repos/'+encodeURIComponent(c.owner)+'/'
 function repoData(){
   var c=cfg();
   return fetch('https://api.github.com'+repoBase()+'/contents/apps.json?ref='+encodeURIComponent(c.branch||'main'),
-    {headers:{'Accept':'application/vnd.github.raw+json','Authorization':'Bearer '+c.token,'X-GitHub-Api-Version':'2022-11-28'}}).then(function(r){
+    {cache:'no-store',headers:{'Accept':'application/vnd.github.raw+json','Authorization':'Bearer '+c.token,'X-GitHub-Api-Version':'2022-11-28'}}).then(function(r){
     if(!r.ok){var e=new Error('HTTP '+r.status);e.status=r.status;throw e}
     return r.text();
   }).then(function(t){var d=JSON.parse(t);if(!d.apps)d.apps=[];if(!d.site)d.site={};return d});
@@ -447,6 +447,16 @@ function imgPaths(d){
 }
 /* Satu commit berisi data baru, gambar baru, dan penghapusan gambar lama. */
 async function commit(op,message){
+  /* Jika GitHub menolak karena ada perubahan lain (409/422), baca ulang data terbaru lalu ulangi otomatis. */
+  for(var n=1;;n++){
+    try{return await commitOnce(op,message)}
+    catch(e){
+      if(n>=4||!e||(e.status!==409&&e.status!==422))throw e;
+      await new Promise(function(r){setTimeout(r,600*n)});
+    }
+  }
+}
+async function commitOnce(op,message){
   var c=cfg(),branch=c.branch||'main',base=repoBase();
   var latest=await repoData();
   var disp=op(clone(latest));
@@ -493,6 +503,15 @@ function setBusy(on){
     if(!b.dataset.label)b.dataset.label=b.textContent;
     b.disabled=on;b.textContent=on?'Menyimpan...':b.dataset.label;
   });
+}
+function syncFromRepo(){
+  if(!hasToken())return;
+  repoData().then(function(d){
+    if(saving)return;
+    DATA=d;APPS=d.apps;buildMenu();renderSocial();
+    var h=location.hash.slice(1);
+    if(h==='admin')route();
+  }).catch(function(){});
 }
 function persist(op,msg,message){
   if(saving)return;
@@ -548,6 +567,7 @@ function formHTML(){
    '<form class="detail" id="appform" novalidate><h1 class="adm-h">'+(editing?'Edit Aplikasi':'Tambah Aplikasi')+'</h1>'+
    '<div class="fgrid">'+
    fld('f-name','Nama aplikasi',d.name,'required autocomplete="off"')+
+   '<div class="f full"><span>Isi otomatis dari file aplikasi (opsional)</span><div class="media"><label class="btn ghost" for="f-appfile">Pilih file aplikasi<input class="sr" id="f-appfile" type="file"></label><span id="autonote" style="align-self:center"></span></div><small>File tidak diunggah ke mana pun. Hanya nama, ukuran, dan jenis file dibaca untuk mengisi Ukuran, Versi, dan Format. Versi terisi jika nama file memuat angka versi, misalnya BungaMekar-1.2.0.exe.</small></div>'+
    '<label class="f" for="f-cat"><span>Kategori</span><input id="f-cat" list="catlist" value="'+esc(d.cat)+'" autocomplete="off"><datalist id="catlist">'+cats().filter(function(c){return c!=='Semua'}).map(function(c){return '<option value="'+esc(c)+'">'}).join('')+'</datalist><small>Pilih yang ada atau ketik kategori baru.</small></label>'+
    fld('f-size','Ukuran file',d.size,'placeholder="45 MB" autocomplete="off"')+
    fld('f-ver','Versi',d.ver,'placeholder="v1.0.0" autocomplete="off"')+
@@ -615,8 +635,47 @@ function uniqueId(list,name){
   while(has(id))id=base+'-'+(n++);
   return id;
 }
+function fmtBytes(n){
+  if(n<1024*1024)return Math.max(1,Math.round(n/1024))+' KB';
+  if(n<1024*1024*1024){var m=n/1048576;return (m<10?m.toFixed(1).replace(/\.0$/,''):Math.round(m))+' MB'}
+  return (n/1073741824).toFixed(1).replace(/\.0$/,'')+' GB';
+}
+function extOf(name){var m=String(name||'').toLowerCase().match(/\.(exe|msi|apk|aab|ipa|zip|rar|7z|dmg|pkg|deb|rpm|appimage|iso|pdf|tar\.gz)$/);return m?'.'+m[1]:''}
+function verOf(text){var m=String(text||'').match(/(?:^|[^0-9a-z])v?(\d+(?:\.\d+){1,3})(?![0-9])/i);return m?'v'+m[1]:''}
+function setAuto(id,val){var e=$('#'+id);if(e&&val){e.value=val;return true}return false}
+function autoNote(t){var e=$('#autonote');if(e)e.textContent=t||''}
+function onAppFile(e){
+  var f=e.target.files[0];e.target.value='';if(!f)return;
+  var got=[];
+  if(setAuto('f-size',fmtBytes(f.size)))got.push('ukuran');
+  var x=extOf(f.name);if(!x){var i=f.name.lastIndexOf('.');x=i>0?f.name.slice(i).toLowerCase():''}
+  if(setAuto('f-fmt',x))got.push('format');
+  if(setAuto('f-ver',verOf(f.name.replace(/\.[^.]+$/,''))))got.push('versi');
+  autoNote(got.length?'Terisi: '+got.join(', ')+(got.indexOf('versi')<0?'. Versi tidak ada di nama file, isi manual.':'.'):'Tidak ada yang bisa dibaca.');
+}
+/* Dari link download: format dari akhiran file; untuk link GitHub Releases juga versi (tag) dan ukuran. */
+function onUrlAuto(){
+  var u=($('#f-url').value||'').trim();if(!/^https?:\/\//i.test(u))return;
+  var path=u.split(/[?#]/)[0],got=[];
+  var x=extOf(decodeURIComponent(path.split('/').pop()||''));
+  if(x&&setAuto('f-fmt',x))got.push('format');
+  var m=path.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/releases\/download\/([^/]+)\/([^/]+)$/i);
+  if(m){
+    var tag=decodeURIComponent(m[3]),fname=decodeURIComponent(m[4]);
+    if(setAuto('f-ver',verOf(tag)||verOf(fname)))got.push('versi');
+    fetch('https://api.github.com/repos/'+m[1]+'/'+m[2]+'/releases/tags/'+encodeURIComponent(tag),{cache:'no-store',headers:{'Accept':'application/vnd.github+json'}})
+      .then(function(r){return r.ok?r.json():null}).then(function(j){
+        if(!j||!j.assets)return;
+        var a=j.assets.filter(function(z){return z.name===fname})[0];
+        if(a&&setAuto('f-size',fmtBytes(a.size)))autoNote('Terisi dari link GitHub Releases: ukuran'+(got.length?', '+got.join(', '):'')+'.');
+      }).catch(function(){});
+  }
+  if(got.length)autoNote('Terisi dari link: '+got.join(', ')+'.');
+}
 function bindForm(){
   renderMedia();
+  $('#f-appfile').addEventListener('change',onAppFile);
+  $('#f-url').addEventListener('change',onUrlAuto);
   $('#m-icon').addEventListener('click',function(e){if(e.target.closest('[data-rm-icon]')){draft.iconImg='';renderMedia()}});
   $('#m-shots').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){draft.shots.splice(+b.dataset.rm,1);renderMedia()}});
   $('#appform').addEventListener('submit',function(e){
@@ -755,7 +814,7 @@ fetch('apps.json?v='+Date.now(),{cache:'no-store'}).then(function(r){
   return r.json();
 }).then(function(d){
   DATA=d||{};if(!DATA.site)DATA.site={};if(!DATA.apps)DATA.apps=[];APPS=DATA.apps;
-  loaded=true;buildMenu();renderSocial();route();
+  loaded=true;buildMenu();renderSocial();route();syncFromRepo();
 }).catch(function(){
   loadError=location.protocol==='file:'?'File apps.json tidak bisa dibaca saat halaman dibuka langsung dari komputer. Pasang di GitHub Pages atau Netlify, atau jalankan server lokal.':'File apps.json tidak ditemukan atau rusak. Pastikan file itu ada di folder yang sama dengan index.html.';
   route();
