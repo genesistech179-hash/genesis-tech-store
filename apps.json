@@ -26,27 +26,6 @@
       ]
     },
     {
-      "id": "tools-sekolah",
-      "icon": "tools",
-      "name": "Tools Sekolah",
-      "cat": "Pendidikan",
-      "size": "15 MB",
-      "ver": "v1.1.0",
-      "tag": "Kumpulan Alat Bantu Tugas Sekolah",
-      "desc": "Tools Sekolah berisi alat kecil yang sering dipakai operator dan guru, seperti pengubah format berkas dan perapi data.",
-      "feats": [
-        "Beberapa alat dalam satu aplikasi",
-        "Tanpa instalasi rumit",
-        "Bekerja offline",
-        "Pembaruan rutin"
-      ],
-      "note": "Beberapa alat membutuhkan Microsoft Office terpasang.",
-      "url": "",
-      "fmt": ".exe",
-      "iconImg": "",
-      "shots": []
-    },
-    {
       "id": "abacaga",
       "icon": "abacaga",
       "name": "ABACAGA",
