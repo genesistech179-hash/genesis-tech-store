@@ -249,6 +249,60 @@ label:focus-within .sr+*{outline:none}
 .ico img{width:100%;height:100%;object-fit:cover;border-radius:22%;display:block}
 @media (max-width:700px){.fgrid{grid-template-columns:1fr}.shot img{height:160px}}
 
+/* Hak cipta satu baris */
+.f-bot span{white-space:nowrap;font-size:clamp(10px,3vw,12.5px)}
+.f-bot nav{gap:6px 16px}
+
+/* Tampilan isi lebih ringkas di HP */
+@media (max-width:700px){
+  body{font-size:13px}
+  main#root{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+  .crumb{font-size:12.5px;margin:14px 2px 10px;gap:6px}
+  .crumb svg{width:14px;height:14px}
+  .detail,.prose{padding:16px;border-radius:16px}
+  .d-top{gap:10px}
+  .d-top .ico{width:72px;height:72px}
+  .d-top h1{font-size:22px}
+  .d-tag{font-size:14px;margin:4px 0 10px}
+  .facts{gap:10px 0}
+  .fact{padding:0 10px;gap:7px}
+  .fact svg{width:20px;height:20px}
+  .fact small{font-size:11px}
+  .fact b{font-size:13px}
+  .d-dl{margin:18px 0 14px;gap:8px}
+  .big{min-width:100%;padding:12px 20px;font-size:15px;border-radius:12px;gap:8px}
+  .big svg{width:19px;height:19px}
+  .hint{font-size:12px}
+  .bar{padding:10px 12px;gap:10px}
+  .bar h2{font-size:15px}
+  .bar svg{width:20px;height:20px}
+  .d-body{padding:12px 2px 0}
+  .d-body p{font-size:14px}
+  .d-body h3{font-size:15px;margin:14px 0 8px}
+  .feats{gap:8px}
+  .feats li{font-size:13.5px;gap:10px}
+  .feats svg{width:18px;height:18px}
+  .note{padding:12px 14px;gap:10px}
+  .note svg{width:20px;height:20px}
+  .note b{font-size:14px}
+  .note span{font-size:13px}
+  .prose h1{font-size:22px}
+  .prose h2{font-size:15px}
+  .hero{padding:22px 18px 44px;border-radius:16px;margin-top:12px}
+  .hero h1{font-size:24px}
+  .hero p{font-size:13.5px;margin:10px 0 16px}
+  .cta{font-size:13.5px;padding:10px 18px}
+  .sec-head{margin:24px 0 12px}
+  .sec-head h2{font-size:18px}
+  .pill{font-size:12px;padding:7px 12px}
+  .card{padding:12px 8px 10px;border-radius:14px}
+  .ico{width:56px;height:56px}
+  .d-top .ico{width:72px;height:72px}
+  .card b{font-size:13.5px}
+  .meta{font-size:11.5px}
+  .dl{font-size:12.5px;padding:8px}
+  .shot img{height:130px}
+}
 </style>
 </head>
 <body>
